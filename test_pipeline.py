@@ -34,7 +34,7 @@ def test_inference(model_name: str = "Qwen/Qwen2.5-1.5B-Instruct"):
         print(f"  Token: {pred['token']:<15} Prob: {pred['percentage']:<8} Logit: {pred['logit']:.2f}")
         
     print("\n5. Running Step-by-Step Autoregressive Generation (max 5 tokens)...")
-    response, history = generate_step_by_step(model, tokenizer, prompt, max_new_tokens=5, temperature=0.7, device=device)
+    response, history, usage_stats = generate_step_by_step(model, tokenizer, prompt, max_new_tokens=5, temperature=0.7, device=device)
     print(f"Generated text: '{response}'")
     print(f"Total steps captured: {len(history)}")
     for step in history:

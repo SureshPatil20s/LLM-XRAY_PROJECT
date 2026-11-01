@@ -1,0 +1,38 @@
+{
+  "run_id": "test_run_1",
+  "phase": "Phase 2: Structured Explanation",
+  "timestamp": {
+    "iso": "2026-10-24T00:19:02.848273+05:30",
+    "local_readable": "2026-10-24 00:19:02"
+  },
+  "model_name": "Qwen",
+  "problem_prompt": "What is 2+2?",
+  "target_response": "4",
+  "model_generated_explanation": {
+    "steps": [
+      "Identify numbers",
+      "Add 2 + 2 = 4"
+    ],
+    "assumptions": [
+      "Base 10 arithmetic"
+    ],
+    "claims": [
+      "Sum is 4"
+    ],
+    "evidence": [
+      "2 + 2 = 4"
+    ],
+    "final_answer": "4",
+    "raw_text": "Steps: 1... Assumptions: Base 10"
+  },
+  "scientific_classification": {
+    "is_verified_internal_trace": false,
+    "disclaimer": "Model generated hypothesis",
+    "success_criteria_met": true,
+    "epistemic_status": "UNVERIFIED_HYPOTHESIS"
+  },
+  "generation_meta": {
+    "tokens_generated": 25,
+    "stopped_naturally": true
+  }
+}

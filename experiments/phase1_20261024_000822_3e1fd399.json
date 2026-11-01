@@ -1,0 +1,753 @@
+{
+  "run_id": "phase1_20261024_000822_3e1fd399",
+  "protocol_phase": "Phase 1: Complete Output Capture",
+  "timestamp": {
+    "iso": "2026-10-24T00:08:22.274276+05:30",
+    "utc": "2026-10-23T18:38:22.274276+00:00",
+    "local_readable": "2026-10-24 00:08:22"
+  },
+  "model": {
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_type": "qwen2",
+    "transformers_version": "4.43.1",
+    "total_parameters": 494032768,
+    "total_parameters_readable": "494.0M",
+    "num_layers": 24,
+    "num_heads": 14,
+    "hidden_dim": 896,
+    "vocab_size": 151936,
+    "device": "cpu",
+    "dtype": "torch.float32"
+  },
+  "prompt": {
+    "raw": "What is AGI AND ASI?",
+    "formatted": "<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n<|im_start|>user\nWhat is AGI AND ASI?<|im_end|>\n<|im_start|>assistant\n",
+    "token_count": 37
+  },
+  "response": {
+    "text": "AGI stands for \"Artificial General Intelligence,\" which is a type of artificial intelligence that can perform a wide range of tasks that a human can do. It is a more general term than \"strong AI,\" which specifically refers to AI that can perform tasks that are specifically designed to be done by humans, such as playing chess or driving a car.\n\nASI stands for \"Artificial Super Intelligence,\" which is a more specific term that refers to AI that is designed to perform tasks that are specifically designed to",
+    "token_count": 100,
+    "is_truncated": true,
+    "truncation_status": "TRUNCATED",
+    "truncation_reason": "Response was cut off because generation hit the allocated token limit of 100 tokens before reaching an EOS token.",
+    "stop_reason": "Budget Exhausted: Reached maximum allocated tokens before model finished."
+  },
+  "token_limits": {
+    "max_new_tokens_budget": 100,
+    "prompt_tokens": 37,
+    "generated_tokens": 100,
+    "total_tokens": 137,
+    "tokens_saved": 0,
+    "budget_exhausted": true
+  },
+  "generation_settings": {
+    "temperature": 0.0,
+    "top_k": 50,
+    "top_p": 0.9,
+    "use_chat_template": true,
+    "sampling_method": "Greedy (Argmax)"
+  },
+  "custom_notes": "",
+  "token_trace_summary": [
+    {
+      "step": 1,
+      "token_id": 1890,
+      "token_str": "AG",
+      "prob": 0.609,
+      "percentage": "60.9%"
+    },
+    {
+      "step": 2,
+      "token_id": 40,
+      "token_str": "I",
+      "prob": 0.9995,
+      "percentage": "99.9%"
+    },
+    {
+      "step": 3,
+      "token_id": 13352,
+      "token_str": " stands",
+      "prob": 0.5352,
+      "percentage": "53.5%"
+    },
+    {
+      "step": 4,
+      "token_id": 369,
+      "token_str": " for",
+      "prob": 0.9998,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 5,
+      "token_id": 330,
+      "token_str": " \"",
+      "prob": 0.4962,
+      "percentage": "49.6%"
+    },
+    {
+      "step": 6,
+      "token_id": 9286,
+      "token_str": "Art",
+      "prob": 0.7221,
+      "percentage": "72.2%"
+    },
+    {
+      "step": 7,
+      "token_id": 16488,
+      "token_str": "ificial",
+      "prob": 0.9957,
+      "percentage": "99.6%"
+    },
+    {
+      "step": 8,
+      "token_id": 3251,
+      "token_str": " General",
+      "prob": 0.9878,
+      "percentage": "98.8%"
+    },
+    {
+      "step": 9,
+      "token_id": 21392,
+      "token_str": " Intelligence",
+      "prob": 0.9929,
+      "percentage": "99.3%"
+    },
+    {
+      "step": 10,
+      "token_id": 1335,
+      "token_str": ",\"",
+      "prob": 0.7851,
+      "percentage": "78.5%"
+    },
+    {
+      "step": 11,
+      "token_id": 892,
+      "token_str": " which",
+      "prob": 0.8629,
+      "percentage": "86.3%"
+    },
+    {
+      "step": 12,
+      "token_id": 374,
+      "token_str": " is",
+      "prob": 0.598,
+      "percentage": "59.8%"
+    },
+    {
+      "step": 13,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.7298,
+      "percentage": "73.0%"
+    },
+    {
+      "step": 14,
+      "token_id": 943,
+      "token_str": " type",
+      "prob": 0.1819,
+      "percentage": "18.2%"
+    },
+    {
+      "step": 15,
+      "token_id": 315,
+      "token_str": " of",
+      "prob": 0.9999,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 16,
+      "token_id": 20443,
+      "token_str": " artificial",
+      "prob": 0.6966,
+      "percentage": "69.7%"
+    },
+    {
+      "step": 17,
+      "token_id": 11229,
+      "token_str": " intelligence",
+      "prob": 0.9954,
+      "percentage": "99.5%"
+    },
+    {
+      "step": 18,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.6938,
+      "percentage": "69.4%"
+    },
+    {
+      "step": 19,
+      "token_id": 646,
+      "token_str": " can",
+      "prob": 0.7293,
+      "percentage": "72.9%"
+    },
+    {
+      "step": 20,
+      "token_id": 2736,
+      "token_str": " perform",
+      "prob": 0.4406,
+      "percentage": "44.1%"
+    },
+    {
+      "step": 21,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.4634,
+      "percentage": "46.3%"
+    },
+    {
+      "step": 22,
+      "token_id": 6884,
+      "token_str": " wide",
+      "prob": 0.9389,
+      "percentage": "93.9%"
+    },
+    {
+      "step": 23,
+      "token_id": 2088,
+      "token_str": " range",
+      "prob": 0.963,
+      "percentage": "96.3%"
+    },
+    {
+      "step": 24,
+      "token_id": 315,
+      "token_str": " of",
+      "prob": 1.0,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 25,
+      "token_id": 9079,
+      "token_str": " tasks",
+      "prob": 0.7969,
+      "percentage": "79.7%"
+    },
+    {
+      "step": 26,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.6474,
+      "percentage": "64.7%"
+    },
+    {
+      "step": 27,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.4758,
+      "percentage": "47.6%"
+    },
+    {
+      "step": 28,
+      "token_id": 3738,
+      "token_str": " human",
+      "prob": 0.9158,
+      "percentage": "91.6%"
+    },
+    {
+      "step": 29,
+      "token_id": 646,
+      "token_str": " can",
+      "prob": 0.3292,
+      "percentage": "32.9%"
+    },
+    {
+      "step": 30,
+      "token_id": 653,
+      "token_str": " do",
+      "prob": 0.4121,
+      "percentage": "41.2%"
+    },
+    {
+      "step": 31,
+      "token_id": 13,
+      "token_str": ".",
+      "prob": 0.3991,
+      "percentage": "39.9%"
+    },
+    {
+      "step": 32,
+      "token_id": 1084,
+      "token_str": " It",
+      "prob": 0.5437,
+      "percentage": "54.4%"
+    },
+    {
+      "step": 33,
+      "token_id": 374,
+      "token_str": " is",
+      "prob": 0.2778,
+      "percentage": "27.8%"
+    },
+    {
+      "step": 34,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.2859,
+      "percentage": "28.6%"
+    },
+    {
+      "step": 35,
+      "token_id": 803,
+      "token_str": " more",
+      "prob": 0.1588,
+      "percentage": "15.9%"
+    },
+    {
+      "step": 36,
+      "token_id": 4586,
+      "token_str": " general",
+      "prob": 0.7223,
+      "percentage": "72.2%"
+    },
+    {
+      "step": 37,
+      "token_id": 4647,
+      "token_str": " term",
+      "prob": 0.4607,
+      "percentage": "46.1%"
+    },
+    {
+      "step": 38,
+      "token_id": 1091,
+      "token_str": " than",
+      "prob": 0.8445,
+      "percentage": "84.4%"
+    },
+    {
+      "step": 39,
+      "token_id": 330,
+      "token_str": " \"",
+      "prob": 0.4999,
+      "percentage": "50.0%"
+    },
+    {
+      "step": 40,
+      "token_id": 4519,
+      "token_str": "strong",
+      "prob": 0.2884,
+      "percentage": "28.8%"
+    },
+    {
+      "step": 41,
+      "token_id": 15235,
+      "token_str": " AI",
+      "prob": 0.9641,
+      "percentage": "96.4%"
+    },
+    {
+      "step": 42,
+      "token_id": 1335,
+      "token_str": ",\"",
+      "prob": 0.7444,
+      "percentage": "74.4%"
+    },
+    {
+      "step": 43,
+      "token_id": 892,
+      "token_str": " which",
+      "prob": 0.7905,
+      "percentage": "79.1%"
+    },
+    {
+      "step": 44,
+      "token_id": 11689,
+      "token_str": " specifically",
+      "prob": 0.2706,
+      "percentage": "27.1%"
+    },
+    {
+      "step": 45,
+      "token_id": 19257,
+      "token_str": " refers",
+      "prob": 0.8172,
+      "percentage": "81.7%"
+    },
+    {
+      "step": 46,
+      "token_id": 311,
+      "token_str": " to",
+      "prob": 0.9997,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 47,
+      "token_id": 15235,
+      "token_str": " AI",
+      "prob": 0.3466,
+      "percentage": "34.7%"
+    },
+    {
+      "step": 48,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.6143,
+      "percentage": "61.4%"
+    },
+    {
+      "step": 49,
+      "token_id": 646,
+      "token_str": " can",
+      "prob": 0.4923,
+      "percentage": "49.2%"
+    },
+    {
+      "step": 50,
+      "token_id": 2736,
+      "token_str": " perform",
+      "prob": 0.3812,
+      "percentage": "38.1%"
+    },
+    {
+      "step": 51,
+      "token_id": 9079,
+      "token_str": " tasks",
+      "prob": 0.6224,
+      "percentage": "62.2%"
+    },
+    {
+      "step": 52,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.7462,
+      "percentage": "74.6%"
+    },
+    {
+      "step": 53,
+      "token_id": 525,
+      "token_str": " are",
+      "prob": 0.5103,
+      "percentage": "51.0%"
+    },
+    {
+      "step": 54,
+      "token_id": 11689,
+      "token_str": " specifically",
+      "prob": 0.0742,
+      "percentage": "7.4%"
+    },
+    {
+      "step": 55,
+      "token_id": 6188,
+      "token_str": " designed",
+      "prob": 0.3739,
+      "percentage": "37.4%"
+    },
+    {
+      "step": 56,
+      "token_id": 311,
+      "token_str": " to",
+      "prob": 0.4369,
+      "percentage": "43.7%"
+    },
+    {
+      "step": 57,
+      "token_id": 387,
+      "token_str": " be",
+      "prob": 0.3345,
+      "percentage": "33.5%"
+    },
+    {
+      "step": 58,
+      "token_id": 2814,
+      "token_str": " done",
+      "prob": 0.1648,
+      "percentage": "16.5%"
+    },
+    {
+      "step": 59,
+      "token_id": 553,
+      "token_str": " by",
+      "prob": 0.9067,
+      "percentage": "90.7%"
+    },
+    {
+      "step": 60,
+      "token_id": 12677,
+      "token_str": " humans",
+      "prob": 0.5333,
+      "percentage": "53.3%"
+    },
+    {
+      "step": 61,
+      "token_id": 11,
+      "token_str": ",",
+      "prob": 0.3666,
+      "percentage": "36.7%"
+    },
+    {
+      "step": 62,
+      "token_id": 1741,
+      "token_str": " such",
+      "prob": 0.8792,
+      "percentage": "87.9%"
+    },
+    {
+      "step": 63,
+      "token_id": 438,
+      "token_str": " as",
+      "prob": 1.0,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 64,
+      "token_id": 5619,
+      "token_str": " playing",
+      "prob": 0.2436,
+      "percentage": "24.4%"
+    },
+    {
+      "step": 65,
+      "token_id": 32719,
+      "token_str": " chess",
+      "prob": 0.3556,
+      "percentage": "35.6%"
+    },
+    {
+      "step": 66,
+      "token_id": 476,
+      "token_str": " or",
+      "prob": 0.7951,
+      "percentage": "79.5%"
+    },
+    {
+      "step": 67,
+      "token_id": 9842,
+      "token_str": " driving",
+      "prob": 0.2691,
+      "percentage": "26.9%"
+    },
+    {
+      "step": 68,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.8819,
+      "percentage": "88.2%"
+    },
+    {
+      "step": 69,
+      "token_id": 1803,
+      "token_str": " car",
+      "prob": 0.9909,
+      "percentage": "99.1%"
+    },
+    {
+      "step": 70,
+      "token_id": 382,
+      "token_str": ".\n\n",
+      "prob": 0.6722,
+      "percentage": "67.2%"
+    },
+    {
+      "step": 71,
+      "token_id": 84502,
+      "token_str": "ASI",
+      "prob": 0.8789,
+      "percentage": "87.9%"
+    },
+    {
+      "step": 72,
+      "token_id": 13352,
+      "token_str": " stands",
+      "prob": 0.5397,
+      "percentage": "54.0%"
+    },
+    {
+      "step": 73,
+      "token_id": 369,
+      "token_str": " for",
+      "prob": 0.9999,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 74,
+      "token_id": 330,
+      "token_str": " \"",
+      "prob": 0.9944,
+      "percentage": "99.4%"
+    },
+    {
+      "step": 75,
+      "token_id": 9286,
+      "token_str": "Art",
+      "prob": 0.7422,
+      "percentage": "74.2%"
+    },
+    {
+      "step": 76,
+      "token_id": 16488,
+      "token_str": "ificial",
+      "prob": 0.9992,
+      "percentage": "99.9%"
+    },
+    {
+      "step": 77,
+      "token_id": 7297,
+      "token_str": " Super",
+      "prob": 0.4485,
+      "percentage": "44.8%"
+    },
+    {
+      "step": 78,
+      "token_id": 21392,
+      "token_str": " Intelligence",
+      "prob": 0.8279,
+      "percentage": "82.8%"
+    },
+    {
+      "step": 79,
+      "token_id": 1335,
+      "token_str": ",\"",
+      "prob": 0.9757,
+      "percentage": "97.6%"
+    },
+    {
+      "step": 80,
+      "token_id": 892,
+      "token_str": " which",
+      "prob": 0.9125,
+      "percentage": "91.2%"
+    },
+    {
+      "step": 81,
+      "token_id": 374,
+      "token_str": " is",
+      "prob": 0.7519,
+      "percentage": "75.2%"
+    },
+    {
+      "step": 82,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.8023,
+      "percentage": "80.2%"
+    },
+    {
+      "step": 83,
+      "token_id": 803,
+      "token_str": " more",
+      "prob": 0.4355,
+      "percentage": "43.6%"
+    },
+    {
+      "step": 84,
+      "token_id": 3151,
+      "token_str": " specific",
+      "prob": 0.5608,
+      "percentage": "56.1%"
+    },
+    {
+      "step": 85,
+      "token_id": 4647,
+      "token_str": " term",
+      "prob": 0.7524,
+      "percentage": "75.2%"
+    },
+    {
+      "step": 86,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.667,
+      "percentage": "66.7%"
+    },
+    {
+      "step": 87,
+      "token_id": 19257,
+      "token_str": " refers",
+      "prob": 0.745,
+      "percentage": "74.5%"
+    },
+    {
+      "step": 88,
+      "token_id": 311,
+      "token_str": " to",
+      "prob": 0.994,
+      "percentage": "99.4%"
+    },
+    {
+      "step": 89,
+      "token_id": 15235,
+      "token_str": " AI",
+      "prob": 0.4551,
+      "percentage": "45.5%"
+    },
+    {
+      "step": 90,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.935,
+      "percentage": "93.5%"
+    },
+    {
+      "step": 91,
+      "token_id": 374,
+      "token_str": " is",
+      "prob": 0.5257,
+      "percentage": "52.6%"
+    },
+    {
+      "step": 92,
+      "token_id": 6188,
+      "token_str": " designed",
+      "prob": 0.5837,
+      "percentage": "58.4%"
+    },
+    {
+      "step": 93,
+      "token_id": 311,
+      "token_str": " to",
+      "prob": 0.9481,
+      "percentage": "94.8%"
+    },
+    {
+      "step": 94,
+      "token_id": 2736,
+      "token_str": " perform",
+      "prob": 0.3892,
+      "percentage": "38.9%"
+    },
+    {
+      "step": 95,
+      "token_id": 9079,
+      "token_str": " tasks",
+      "prob": 0.7645,
+      "percentage": "76.4%"
+    },
+    {
+      "step": 96,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.9457,
+      "percentage": "94.6%"
+    },
+    {
+      "step": 97,
+      "token_id": 525,
+      "token_str": " are",
+      "prob": 0.8254,
+      "percentage": "82.5%"
+    },
+    {
+      "step": 98,
+      "token_id": 11689,
+      "token_str": " specifically",
+      "prob": 0.2055,
+      "percentage": "20.6%"
+    },
+    {
+      "step": 99,
+      "token_id": 6188,
+      "token_str": " designed",
+      "prob": 0.703,
+      "percentage": "70.3%"
+    },
+    {
+      "step": 100,
+      "token_id": 311,
+      "token_str": " to",
+      "prob": 0.8773,
+      "percentage": "87.7%"
+    }
+  ]
+}

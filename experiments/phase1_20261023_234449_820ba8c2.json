@@ -1,0 +1,43 @@
+{
+  "run_id": "phase1_20261023_234449_820ba8c2",
+  "protocol_phase": "Phase 1: Complete Output Capture",
+  "timestamp": {
+    "iso": "2026-10-23T23:44:49.148434+05:30",
+    "utc": "2026-10-23T18:14:49.148434+00:00",
+    "local_readable": "2026-10-23 23:44:49"
+  },
+  "model": {
+    "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+    "device": "cpu"
+  },
+  "prompt": {
+    "raw": "What is 2+2?",
+    "formatted": "What is 2+2?",
+    "token_count": 5
+  },
+  "response": {
+    "text": "4",
+    "token_count": 1,
+    "is_truncated": false,
+    "truncation_status": "COMPLETE",
+    "truncation_reason": "Response completed naturally (emitted EOS token after 1 tokens, within budget of 10).",
+    "stop_reason": "Natural completion"
+  },
+  "token_limits": {
+    "max_new_tokens_budget": 10,
+    "prompt_tokens": 5,
+    "generated_tokens": 1,
+    "total_tokens": 6,
+    "tokens_saved": 9,
+    "budget_exhausted": false
+  },
+  "generation_settings": {
+    "temperature": 0.0,
+    "top_k": 50,
+    "top_p": 0.9,
+    "use_chat_template": true,
+    "sampling_method": "Greedy (Argmax)"
+  },
+  "custom_notes": "",
+  "token_trace_summary": []
+}

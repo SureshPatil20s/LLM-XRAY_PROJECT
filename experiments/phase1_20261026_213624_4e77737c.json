@@ -1,0 +1,263 @@
+{
+  "run_id": "phase1_20261026_213624_4e77737c",
+  "protocol_phase": "Phase 1: Complete Output Capture",
+  "timestamp": {
+    "iso": "2026-10-26T21:36:24.406880+05:30",
+    "utc": "2026-10-26T16:06:24.406880+00:00",
+    "local_readable": "2026-10-26 21:36:24"
+  },
+  "model": {
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_type": "qwen2",
+    "transformers_version": "4.43.1",
+    "total_parameters": 494032768,
+    "total_parameters_readable": "494.0M",
+    "num_layers": 24,
+    "num_heads": 14,
+    "hidden_dim": 896,
+    "vocab_size": 151936,
+    "device": "cpu",
+    "dtype": "torch.float32"
+  },
+  "prompt": {
+    "raw": "who are you?",
+    "formatted": "<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n<|im_start|>user\nwho are you?<|im_end|>\n<|im_start|>assistant\n",
+    "token_count": 33
+  },
+  "response": {
+    "text": "I am Qwen, a large language model created by Alibaba Cloud. I am designed to assist with a wide range of tasks, from simple questions to",
+    "token_count": 30,
+    "is_truncated": true,
+    "truncation_status": "TRUNCATED",
+    "truncation_reason": "Response was cut off because generation hit the allocated token limit of 30 tokens before reaching an EOS token.",
+    "stop_reason": "Budget Exhausted: Reached maximum allocated tokens before model finished."
+  },
+  "token_limits": {
+    "max_new_tokens_budget": 30,
+    "prompt_tokens": 33,
+    "generated_tokens": 30,
+    "total_tokens": 63,
+    "tokens_saved": 0,
+    "budget_exhausted": true
+  },
+  "generation_settings": {
+    "temperature": 0.0,
+    "top_k": 50,
+    "top_p": 0.9,
+    "use_chat_template": true,
+    "sampling_method": "Greedy (Argmax)"
+  },
+  "custom_notes": "",
+  "token_trace_summary": [
+    {
+      "step": 1,
+      "token_id": 40,
+      "token_str": "I",
+      "prob": 0.9425,
+      "percentage": "94.3%"
+    },
+    {
+      "step": 2,
+      "token_id": 1079,
+      "token_str": " am",
+      "prob": 0.9895,
+      "percentage": "98.9%"
+    },
+    {
+      "step": 3,
+      "token_id": 1207,
+      "token_str": " Q",
+      "prob": 0.7976,
+      "percentage": "79.8%"
+    },
+    {
+      "step": 4,
+      "token_id": 16948,
+      "token_str": "wen",
+      "prob": 1.0,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 5,
+      "token_id": 11,
+      "token_str": ",",
+      "prob": 0.9954,
+      "percentage": "99.5%"
+    },
+    {
+      "step": 6,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.6958,
+      "percentage": "69.6%"
+    },
+    {
+      "step": 7,
+      "token_id": 3460,
+      "token_str": " large",
+      "prob": 0.7362,
+      "percentage": "73.6%"
+    },
+    {
+      "step": 8,
+      "token_id": 4128,
+      "token_str": " language",
+      "prob": 0.9655,
+      "percentage": "96.5%"
+    },
+    {
+      "step": 9,
+      "token_id": 1614,
+      "token_str": " model",
+      "prob": 0.9984,
+      "percentage": "99.8%"
+    },
+    {
+      "step": 10,
+      "token_id": 3465,
+      "token_str": " created",
+      "prob": 0.8453,
+      "percentage": "84.5%"
+    },
+    {
+      "step": 11,
+      "token_id": 553,
+      "token_str": " by",
+      "prob": 0.9956,
+      "percentage": "99.6%"
+    },
+    {
+      "step": 12,
+      "token_id": 54364,
+      "token_str": " Alibaba",
+      "prob": 0.9995,
+      "percentage": "99.9%"
+    },
+    {
+      "step": 13,
+      "token_id": 14817,
+      "token_str": " Cloud",
+      "prob": 0.9994,
+      "percentage": "99.9%"
+    },
+    {
+      "step": 14,
+      "token_id": 13,
+      "token_str": ".",
+      "prob": 0.8838,
+      "percentage": "88.4%"
+    },
+    {
+      "step": 15,
+      "token_id": 358,
+      "token_str": " I",
+      "prob": 0.8659,
+      "percentage": "86.6%"
+    },
+    {
+      "step": 16,
+      "token_id": 1079,
+      "token_str": " am",
+      "prob": 0.8101,
+      "percentage": "81.0%"
+    },
+    {
+      "step": 17,
+      "token_id": 6188,
+      "token_str": " designed",
+      "prob": 0.3521,
+      "percentage": "35.2%"
+    },
+    {
+      "step": 18,
+      "token_id": 311,
+      "token_str": " to",
+      "prob": 0.9907,
+      "percentage": "99.1%"
+    },
+    {
+      "step": 19,
+      "token_id": 7789,
+      "token_str": " assist",
+      "prob": 0.2459,
+      "percentage": "24.6%"
+    },
+    {
+      "step": 20,
+      "token_id": 448,
+      "token_str": " with",
+      "prob": 0.6095,
+      "percentage": "60.9%"
+    },
+    {
+      "step": 21,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.5714,
+      "percentage": "57.1%"
+    },
+    {
+      "step": 22,
+      "token_id": 6884,
+      "token_str": " wide",
+      "prob": 0.7975,
+      "percentage": "79.8%"
+    },
+    {
+      "step": 23,
+      "token_id": 2088,
+      "token_str": " range",
+      "prob": 0.9588,
+      "percentage": "95.9%"
+    },
+    {
+      "step": 24,
+      "token_id": 315,
+      "token_str": " of",
+      "prob": 1.0,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 25,
+      "token_id": 9079,
+      "token_str": " tasks",
+      "prob": 0.5345,
+      "percentage": "53.5%"
+    },
+    {
+      "step": 26,
+      "token_id": 11,
+      "token_str": ",",
+      "prob": 0.6486,
+      "percentage": "64.9%"
+    },
+    {
+      "step": 27,
+      "token_id": 504,
+      "token_str": " from",
+      "prob": 0.5174,
+      "percentage": "51.7%"
+    },
+    {
+      "step": 28,
+      "token_id": 4285,
+      "token_str": " simple",
+      "prob": 0.2518,
+      "percentage": "25.2%"
+    },
+    {
+      "step": 29,
+      "token_id": 4755,
+      "token_str": " questions",
+      "prob": 0.2284,
+      "percentage": "22.8%"
+    },
+    {
+      "step": 30,
+      "token_id": 311,
+      "token_str": " to",
+      "prob": 0.8689,
+      "percentage": "86.9%"
+    }
+  ]
+}

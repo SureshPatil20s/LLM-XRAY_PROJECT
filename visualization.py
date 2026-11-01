@@ -12,8 +12,39 @@ from typing import List, Dict, Any, Optional
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from sklearn.decomposition import PCA
 import torch
+
+try:
+    from sklearn.decomposition import PCA
+except Exception:
+    class PCA:
+        """
+        Lightweight, robust PCA implementation using NumPy SVD.
+        Provides identical interface and results to sklearn.decomposition.PCA
+        without introducing binary dependencies or DLL policy conflicts.
+        """
+        def __init__(self, n_components: int = 2):
+            self.n_components = n_components
+            self.explained_variance_ratio_ = np.zeros(n_components)
+
+        def fit_transform(self, X: np.ndarray) -> np.ndarray:
+            n_samples, n_features = X.shape
+            k = min(self.n_components, n_samples, n_features)
+            if k < 1:
+                return np.zeros((n_samples, self.n_components))
+            mean = np.mean(X, axis=0, keepdims=True)
+            X_centered = X - mean
+            U, S, _ = np.linalg.svd(X_centered, full_matrices=False)
+            coords = U[:, :k] * S[:k]
+            total_var = np.sum(S ** 2)
+            var_ratios = (S[:k] ** 2) / (total_var if total_var > 0 else 1.0)
+            self.explained_variance_ratio_ = np.zeros(self.n_components)
+            self.explained_variance_ratio_[:k] = var_ratios
+            if coords.shape[1] < self.n_components:
+                padding = np.zeros((n_samples, self.n_components - coords.shape[1]))
+                coords = np.hstack([coords, padding])
+            return coords
+
 
 
 def plot_embeddings_pca(
@@ -136,24 +167,58 @@ def plot_attention_heatmap(
     attention_matrix: np.ndarray,
     tokens: List[str],
     layer_idx: int,
-    head_idx: int
+    head_idx: int,
+    log_scale: bool = False
 ) -> go.Figure:
     """
     Plots the attention matrix heatmap for a specific layer and attention head.
     attention_matrix shape: [seq_len, seq_len]
+
+    Parameters
+    ----------
+    log_scale : bool
+        If True, apply log-normalization so that low-weight attention patterns
+        (normally crushed by "attention sink" tokens) become visible.
     """
+    # Guard against empty or zero‑size matrices
+    if attention_matrix.size == 0:
+        # Return an empty figure with a helpful annotation
+        empty_fig = go.Figure()
+        empty_fig.add_annotation(text="No attention data for selected token range.", showarrow=False)
+        empty_fig.update_layout(template="plotly_dark", height=400)
+        return empty_fig
+    
+    z = attention_matrix.copy()
+    
+    if log_scale:
+        # Shift into log space: log(w + eps) then rescale to [0, 1]
+        eps = 1e-8
+        z = np.log(z + eps)
+        # Clean any NaN/inf before normalization
+        z = np.nan_to_num(z, nan=0.0, posinf=0.0, neginf=np.nanmin(z[np.isfinite(z)]) if np.any(np.isfinite(z)) else 0.0)
+        if z.size > 0:
+            z_min, z_max = z.min(), z.max()
+            if z_max - z_min > 0:
+                z = (z - z_min) / (z_max - z_min)
+            else:
+                z = np.zeros_like(z)
+        colorbar_title = "Weight (log)"
+    else:
+        colorbar_title = "Weight"
+
     fig = go.Figure(data=go.Heatmap(
-        z=attention_matrix,
+        z=z,
         x=tokens,
         y=tokens,
         colorscale="Blues",
         zmin=0.0,
         zmax=1.0,
-        colorbar=dict(title="Weight")
+        colorbar=dict(title=colorbar_title)
     ))
-    
+
+    scale_label = " [log scale]" if log_scale else ""
     fig.update_layout(
-        title=f"Self-Attention Matrix — Layer {layer_idx}, Head {head_idx}",
+        title=f"Self-Attention Matrix — Layer {layer_idx}, Head {head_idx}{scale_label}",
         xaxis_title="Key Tokens (Attended To)",
         yaxis_title="Query Tokens (Attending From)",
         template="plotly_dark",
@@ -179,8 +244,12 @@ def plot_hidden_states_pca(
     
     for layer in selected_layers:
         if layer < len(hidden_states):
-            h = hidden_states[layer].squeeze(0).numpy() # [seq_len, hidden_dim]
+            h = hidden_states[layer].squeeze(0).numpy()  # [seq_len, hidden_dim]
+            seq_len = h.shape[0]
             for i, tok in enumerate(tokens):
+                if i >= seq_len:
+                    # Stop when we run out of hidden state vectors (e.g., extra special tokens)
+                    break
                 vectors.append(h[i])
                 labels.append(f"L{layer}: {tok}")
                 layer_tags.append(f"Layer {layer}")
@@ -262,6 +331,12 @@ def plot_token_generation_timeline(step_history: List[Dict[str, Any]]) -> go.Fig
     """
     Bar chart showing the model confidence (probability) for each sequentially generated token.
     """
+    if not step_history:
+        fig = go.Figure()
+        fig.add_annotation(text="No tokens generated.", showarrow=False)
+        fig.update_layout(template="plotly_dark", height=200)
+        return fig
+
     steps = [f"#{s['step']}: {s['display_str']}" for s in step_history]
     probs = [s["prob"] * 100 for s in step_history]
     
@@ -287,3 +362,86 @@ def plot_token_generation_timeline(step_history: List[Dict[str, Any]]) -> go.Fig
         margin=dict(l=40, r=40, t=50, b=40)
     )
     return fig
+
+
+TOKEN_GLOSS = {
+    "换句话": "In other words",
+    "下面小编": "Editor's intro",
+    "回答": "Answer",
+    "计算": "Calculate",
+    "结果": "Result",
+    "总结": "Summary",
+    "解释": "Explain",
+    "第一": "First",
+    "首先": "First of all",
+    "综上所述": "In summary",
+    "因此": "Therefore",
+    "zellik": "feature",
+}
+
+
+def get_token_display_with_gloss(tok: str) -> str:
+    clean = tok.strip().strip("'").strip('"')
+    if clean in TOKEN_GLOSS:
+        return f"{clean} [{TOKEN_GLOSS[clean]}]"
+    return clean
+
+
+def plot_logit_lens_progression(layer_predictions: List[Dict[str, Any]]) -> go.Figure:
+    """
+    Interactive line/scatter chart showing the top token and its confidence emerging across layers.
+    Includes English glosses for multilingual tokens in early/mid layers.
+    """
+    layers = [p["layer"] for p in layer_predictions]
+    probs = [p["top_prob"] * 100 for p in layer_predictions]
+    display_tokens = [get_token_display_with_gloss(p["top_token"]) for p in layer_predictions]
+
+    hover_texts = []
+    for p in layer_predictions:
+        cands_formatted = []
+        for c in p["candidates"][:3]:
+            g = get_token_display_with_gloss(c["token"])
+            cands_formatted.append(f"• {g}: {c['percentage']}")
+        cands_str = "<br>".join(cands_formatted)
+        
+        top_g = get_token_display_with_gloss(p["top_token"])
+        hover_texts.append(
+            f"<b>{p['layer_name']}</b><br>"
+            f"Top Prediction: <b>{top_g}</b> ({p['percentage']})<br>"
+            f"<b>Top Candidates:</b><br>{cands_str}"
+        )
+
+    fig = go.Figure()
+
+    # Base line connecting layers
+    fig.add_trace(go.Scatter(
+        x=layers,
+        y=probs,
+        mode="lines+markers+text",
+        name="Top Prediction Probability",
+        line=dict(color="#38bdf8", width=3, shape="spline"),
+        marker=dict(
+            size=12,
+            color=probs,
+            colorscale="Viridis",
+            showscale=True,
+            colorbar=dict(title="Confidence (%)", len=0.8)
+        ),
+        text=display_tokens,
+        textposition="top center",
+        hovertext=hover_texts,
+        hoverinfo="text"
+    ))
+
+    fig.update_layout(
+        title="Logit Lens: Emergence of Predicted Token Identity Across Transformer Layers",
+        xaxis_title="Transformer Layer (0 = Embedding, N = Final Decoder Block)",
+        yaxis_title="Top Token Confidence (%)",
+        template="plotly_dark",
+        height=480,
+        yaxis=dict(range=[0, 115]),
+        xaxis=dict(tickmode="linear", tick0=0, dtick=2),
+        margin=dict(l=50, r=50, t=60, b=50)
+    )
+    return fig
+

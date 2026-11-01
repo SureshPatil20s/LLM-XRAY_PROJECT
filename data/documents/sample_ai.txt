@@ -1,0 +1,1 @@
+Artificial Intelligence (AI) is a wide-ranging branch of computer science concerned with building smart machines capable of performing tasks that typically require human intelligence. Transformers are a deep learning architecture introduced in 2017.

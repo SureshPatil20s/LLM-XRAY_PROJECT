@@ -2,6 +2,10 @@ torch
 transformers
 streamlit
 plotly
-scikit-learn
+pandas
 numpy
 accelerate
+faiss-cpu
+sentence-transformers
+pypdf
+python-docx
