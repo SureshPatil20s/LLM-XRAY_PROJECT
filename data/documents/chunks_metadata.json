@@ -1,0 +1,14 @@
+[
+  {
+    "chunk_id": 1,
+    "text": "Transformers are deep learning architectures introduced in 2017 by Vaswani et al.",
+    "source": "test_sample.txt",
+    "page": 1
+  },
+  {
+    "chunk_id": 2,
+    "text": "17 by Vaswani et al. They rely on multi-head self-attention mechanisms.",
+    "source": "test_sample.txt",
+    "page": 1
+  }
+]

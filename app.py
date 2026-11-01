@@ -65,7 +65,7 @@ import claim_verifier
 
 # Streamlit Page Config
 st.set_page_config(
-    page_title="LocalGPT — ChatGPT-Style AI with RAG & LLM X-Ray",
+    page_title="SURESH.GPT — ChatGPT-Style AI with RAG & LLM X-Ray",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -135,8 +135,8 @@ def get_cached_model(name: str):
 
 # Sidebar: App Mode Selector & Model Setup
 st.sidebar.markdown("""
-<div style="font-size:1.25rem; font-weight:800; color:#38bdf8; margin-bottom:4px;">
-    🤖 LOCALGPT
+<div style="font-size:1.35rem; font-weight:800; color:#38bdf8; margin-bottom:4px;">
+    🤖 SURESH.GPT
 </div>
 <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">
     Local AI Assistant • RAG • LLM X-Ray
@@ -145,7 +145,7 @@ st.sidebar.markdown("""
 
 nav_mode = st.sidebar.radio(
     "Navigation Mode",
-    options=["💬 LocalGPT Assistant", "🔬 LLM X-Ray Laboratory & Claim Verifier"],
+    options=["💬 SURESH.GPT Assistant", "🔬 LLM X-Ray Laboratory & Claim Verifier"],
     index=0
 )
 
@@ -238,12 +238,20 @@ def render_localgpt_interface():
                 st.rerun()
 
     # Rename active chat expander
+    # Rename active chat expander (wrapped in st.form so Enter key saves immediately)
     with st.sidebar.expander("✏️ Rename Active Chat", expanded=False):
         new_title = st.text_input("New Title", value=conv_meta.get("title", ""), key="title_rename_input")
         if st.button("Save Title", key="save_title_btn"):
             if new_title.strip():
                 database.update_conversation_title(conv_id, new_title.strip())
                 st.rerun()
+        with st.form(key=f"rename_chat_form_{conv_id}", clear_on_submit=False):
+            new_title = st.text_input("New Title (Press Enter to Save)", value=conv_meta.get("title", ""), key=f"title_rename_input_{conv_id}")
+            save_title_submitted = st.form_submit_button("💾 Save Title", use_container_width=True)
+            if save_title_submitted:
+                if new_title.strip():
+                    database.update_conversation_title(conv_id, new_title.strip())
+                    st.rerun()
 
     # ── Sidebar: Document Upload (RAG) ────────────────────────────────────────
     st.sidebar.markdown("---")
@@ -297,8 +305,8 @@ def render_localgpt_interface():
         max_tokens = st.slider("Max Tokens", min_value=30, max_value=1024, value=256, step=16)
 
     # ── Main Area: Chat Title & Header ───────────────────────────────────────
-    st.markdown(f'<div class="localgpt-title">💬 {conv_meta.get("title", "New Chat")}</div>', unsafe_allow_html=True)
-    st.markdown('<div class="localgpt-sub">ChatGPT-Style Local AI Assistant with Document RAG and Integrated LLM X-Ray Inspection</div>', unsafe_allow_html=True)
+    st.markdown('<div class="localgpt-title">🤖 SURESH.GPT</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="localgpt-sub">Active Chat: <b style="color:#e2e8f0;">{conv_meta.get("title", "New Chat")}</b> • ChatGPT-Style Local AI Assistant with Document RAG &amp; LLM X-Ray</div>', unsafe_allow_html=True)
 
     # Fetch Conversation Message History
     history = memory_mgr.get_history()
@@ -377,6 +385,7 @@ def render_localgpt_interface():
                         xray.render_xray_panel(xray_data, key_prefix=f"inline_{msg_id}")
 
     # Edit Message Modal / Expander if user clicked Edit
+    # Edit Message Modal / Expander if user clicked Edit (wrapped in st.form so Enter key submits)
     if st.session_state["edit_mode_msg_id"]:
         edit_id = st.session_state["edit_mode_msg_id"]
         st.markdown("---")
@@ -388,6 +397,22 @@ def render_localgpt_interface():
                 # Delete messages starting from edit_id
                 memory_mgr.delete_from_message(edit_id, include_self=True)
                 st.session_state["pending_user_query"] = new_msg_val
+        with st.form(key=f"edit_form_{edit_id}", clear_on_submit=False):
+            st.info("✏️ **Editing user message:** Press **Enter** or click Submit to regenerate from this prompt onwards.")
+            new_msg_val = st.text_input("Edit your prompt (Press Enter to submit):", value=st.session_state.get("edit_text", ""), key=f"edit_prompt_input_{edit_id}")
+            col_ed1, col_ed2 = st.columns([1, 4])
+            with col_ed1:
+                edit_submitted = st.form_submit_button("🚀 Submit & Regenerate", type="primary", use_container_width=True)
+            with col_ed2:
+                edit_cancelled = st.form_submit_button("Cancel Edit", use_container_width=True)
+
+            if edit_submitted:
+                if new_msg_val.strip():
+                    memory_mgr.delete_from_message(edit_id, include_self=True)
+                    st.session_state["pending_user_query"] = new_msg_val.strip()
+                    st.session_state["edit_mode_msg_id"] = None
+                    st.rerun()
+            elif edit_cancelled:
                 st.session_state["edit_mode_msg_id"] = None
                 st.rerun()
         with col_ed2:
@@ -469,8 +494,15 @@ def render_xray_lab_interface():
         prompt = st.text_input("Enter prompt for mechanistic inspection:", value="What is AI?", key="lab_prompt_input")
     with col_inp2:
         max_lab_tokens = st.slider("Budget Tokens", min_value=5, max_value=60, value=25, key="lab_max_tokens")
+    with st.form(key="lab_prompt_form", clear_on_submit=False):
+        col_inp1, col_inp2 = st.columns([3, 1])
+        with col_inp1:
+            prompt = st.text_input("Enter prompt for mechanistic inspection (Press Enter to Run):", value="What is AI?", key="lab_prompt_input")
+        with col_inp2:
+            max_lab_tokens = st.slider("Budget Tokens", min_value=5, max_value=60, value=25, key="lab_max_tokens")
 
     run_lab_btn = st.button("🚀 Run Deep Lab Forward Pass", type="primary", use_container_width=True)
+    run_lab_btn = st.form_submit_button("🚀 Run Deep Lab Forward Pass", type="primary", use_container_width=True)
 
     if run_lab_btn or "lab_results" not in st.session_state:
         with st.spinner("Executing Transformer forward pass and capturing all intermediate tensors..."):
@@ -680,7 +712,7 @@ def render_xray_lab_interface():
 
 
 # Dispatch active interface mode
-if nav_mode == "💬 LocalGPT Assistant":
+if nav_mode == "💬 SURESH.GPT Assistant":
     render_localgpt_interface()
 else:
     render_xray_lab_interface()
