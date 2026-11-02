@@ -489,20 +489,13 @@ def render_xray_lab_interface():
     st.markdown('<div class="localgpt-title">🔬 LLM X-RAY LABORATORY</div>', unsafe_allow_html=True)
     st.markdown('<div class="localgpt-sub">Deep Mechanistic Interpretability Lab • Autoregressive Diagnostics • Phases 1, 2, and 3 Verification</div>', unsafe_allow_html=True)
 
-    col_inp1, col_inp2 = st.columns([3, 1])
-    with col_inp1:
-        prompt = st.text_input("Enter prompt for mechanistic inspection:", value="What is AI?", key="lab_prompt_input")
-    with col_inp2:
-        max_lab_tokens = st.slider("Budget Tokens", min_value=5, max_value=60, value=25, key="lab_max_tokens")
     with st.form(key="lab_prompt_form", clear_on_submit=False):
         col_inp1, col_inp2 = st.columns([3, 1])
         with col_inp1:
             prompt = st.text_input("Enter prompt for mechanistic inspection (Press Enter to Run):", value="What is AI?", key="lab_prompt_input")
         with col_inp2:
             max_lab_tokens = st.slider("Budget Tokens", min_value=5, max_value=60, value=25, key="lab_max_tokens")
-
-    run_lab_btn = st.button("🚀 Run Deep Lab Forward Pass", type="primary", use_container_width=True)
-    run_lab_btn = st.form_submit_button("🚀 Run Deep Lab Forward Pass", type="primary", use_container_width=True)
+        run_lab_btn = st.form_submit_button("🚀 Run Deep Lab Forward Pass", type="primary", use_container_width=True)
 
     if run_lab_btn or "lab_results" not in st.session_state:
         with st.spinner("Executing Transformer forward pass and capturing all intermediate tensors..."):

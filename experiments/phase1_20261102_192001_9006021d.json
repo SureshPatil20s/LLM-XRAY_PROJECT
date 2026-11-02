@@ -1,0 +1,228 @@
+{
+  "run_id": "phase1_20261102_192001_9006021d",
+  "protocol_phase": "Phase 1: Complete Output Capture",
+  "timestamp": {
+    "iso": "2026-11-02T19:20:01.070737+05:30",
+    "utc": "2026-11-02T13:50:01.070737+00:00",
+    "local_readable": "2026-11-02 19:20:01"
+  },
+  "model": {
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "model_type": "qwen2",
+    "transformers_version": "4.43.1",
+    "total_parameters": 494032768,
+    "total_parameters_readable": "494.0M",
+    "num_layers": 24,
+    "num_heads": 14,
+    "hidden_dim": 896,
+    "vocab_size": 151936,
+    "device": "cpu",
+    "dtype": "torch.float32"
+  },
+  "prompt": {
+    "raw": "What is AI?",
+    "formatted": "<|im_start|>system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.<|im_end|>\n<|im_start|>user\nWhat is AI?<|im_end|>\n<|im_start|>assistant\n",
+    "token_count": 33
+  },
+  "response": {
+    "text": "AI stands for \"Artificial Intelligence,\" which is a field of computer science that focuses on the development of intelligent machines that can",
+    "token_count": 25,
+    "is_truncated": true,
+    "truncation_status": "TRUNCATED",
+    "truncation_reason": "Response was cut off because generation hit the allocated token limit of 25 tokens before reaching an EOS token.",
+    "stop_reason": "Budget Exhausted: Reached maximum allocated tokens before model finished."
+  },
+  "token_limits": {
+    "max_new_tokens_budget": 25,
+    "prompt_tokens": 33,
+    "generated_tokens": 25,
+    "total_tokens": 58,
+    "tokens_saved": 0,
+    "budget_exhausted": true
+  },
+  "generation_settings": {
+    "temperature": 0.0,
+    "top_k": 50,
+    "top_p": 0.9,
+    "use_chat_template": true,
+    "sampling_method": "Greedy (Argmax)"
+  },
+  "custom_notes": "",
+  "token_trace_summary": [
+    {
+      "step": 1,
+      "token_id": 15469,
+      "token_str": "AI",
+      "prob": 0.8827,
+      "percentage": "88.3%"
+    },
+    {
+      "step": 2,
+      "token_id": 13352,
+      "token_str": " stands",
+      "prob": 0.5349,
+      "percentage": "53.5%"
+    },
+    {
+      "step": 3,
+      "token_id": 369,
+      "token_str": " for",
+      "prob": 0.9999,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 4,
+      "token_id": 330,
+      "token_str": " \"",
+      "prob": 0.6267,
+      "percentage": "62.7%"
+    },
+    {
+      "step": 5,
+      "token_id": 9286,
+      "token_str": "Art",
+      "prob": 0.7589,
+      "percentage": "75.9%"
+    },
+    {
+      "step": 6,
+      "token_id": 16488,
+      "token_str": "ificial",
+      "prob": 0.9995,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 7,
+      "token_id": 21392,
+      "token_str": " Intelligence",
+      "prob": 0.9895,
+      "percentage": "99.0%"
+    },
+    {
+      "step": 8,
+      "token_id": 1335,
+      "token_str": ",\"",
+      "prob": 0.4828,
+      "percentage": "48.3%"
+    },
+    {
+      "step": 9,
+      "token_id": 892,
+      "token_str": " which",
+      "prob": 0.681,
+      "percentage": "68.1%"
+    },
+    {
+      "step": 10,
+      "token_id": 374,
+      "token_str": " is",
+      "prob": 0.6026,
+      "percentage": "60.3%"
+    },
+    {
+      "step": 11,
+      "token_id": 264,
+      "token_str": " a",
+      "prob": 0.8262,
+      "percentage": "82.6%"
+    },
+    {
+      "step": 12,
+      "token_id": 2070,
+      "token_str": " field",
+      "prob": 0.2324,
+      "percentage": "23.2%"
+    },
+    {
+      "step": 13,
+      "token_id": 315,
+      "token_str": " of",
+      "prob": 0.9557,
+      "percentage": "95.6%"
+    },
+    {
+      "step": 14,
+      "token_id": 6366,
+      "token_str": " computer",
+      "prob": 0.7826,
+      "percentage": "78.3%"
+    },
+    {
+      "step": 15,
+      "token_id": 8038,
+      "token_str": " science",
+      "prob": 0.9975,
+      "percentage": "99.8%"
+    },
+    {
+      "step": 16,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.5946,
+      "percentage": "59.5%"
+    },
+    {
+      "step": 17,
+      "token_id": 23497,
+      "token_str": " focuses",
+      "prob": 0.4165,
+      "percentage": "41.6%"
+    },
+    {
+      "step": 18,
+      "token_id": 389,
+      "token_str": " on",
+      "prob": 0.9999,
+      "percentage": "100.0%"
+    },
+    {
+      "step": 19,
+      "token_id": 279,
+      "token_str": " the",
+      "prob": 0.3655,
+      "percentage": "36.5%"
+    },
+    {
+      "step": 20,
+      "token_id": 4401,
+      "token_str": " development",
+      "prob": 0.7069,
+      "percentage": "70.7%"
+    },
+    {
+      "step": 21,
+      "token_id": 315,
+      "token_str": " of",
+      "prob": 0.9611,
+      "percentage": "96.1%"
+    },
+    {
+      "step": 22,
+      "token_id": 24514,
+      "token_str": " intelligent",
+      "prob": 0.8303,
+      "percentage": "83.0%"
+    },
+    {
+      "step": 23,
+      "token_id": 12645,
+      "token_str": " machines",
+      "prob": 0.9557,
+      "percentage": "95.6%"
+    },
+    {
+      "step": 24,
+      "token_id": 429,
+      "token_str": " that",
+      "prob": 0.8524,
+      "percentage": "85.2%"
+    },
+    {
+      "step": 25,
+      "token_id": 646,
+      "token_str": " can",
+      "prob": 0.6299,
+      "percentage": "63.0%"
+    }
+  ]
+}
