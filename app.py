@@ -71,46 +71,250 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling
+# Custom Styling — Minimalism + Liquid Glass + Subtle Glassmorphism
 st.markdown("""
 <style>
-    .localgpt-title {
-        font-size: 2.1rem;
-        font-weight: 800;
-        background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.2rem;
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    /* ── Global Cosmic Backdrop with Liquid Ambient Mesh ──────────────── */
+    .stApp {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        background: 
+            radial-gradient(ellipse 90% 55% at 15% -10%, rgba(56, 189, 248, 0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 70% 45% at 85% 15%, rgba(99, 102, 241, 0.07) 0%, transparent 55%),
+            radial-gradient(ellipse 75% 55% at 50% 100%, rgba(168, 85, 247, 0.05) 0%, transparent 65%),
+            #070a12 !important;
+        color: #e2e8f0 !important;
     }
-    .localgpt-sub {
-        font-size: 0.95rem;
-        color: #94a3b8;
-        margin-bottom: 1.2rem;
+
+    /* ── Translucent Frosted Glass Sidebar ────────────────────────────── */
+    [data-testid="stSidebar"] {
+        background: rgba(10, 14, 26, 0.72) !important;
+        backdrop-filter: blur(28px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+        box-shadow: 4px 0 35px rgba(0, 0, 0, 0.45) !important;
     }
-    .chat-bubble-assistant {
-        background-color: #0f172a;
-        border: 1px solid #334155;
-        border-radius: 8px;
-        padding: 14px 18px;
-        margin-bottom: 8px;
+
+    /* ── Glassmorphism Hero Card ──────────────────────────────────────── */
+    .glass-hero {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%),
+                    rgba(13, 19, 36, 0.65) !important;
+        backdrop-filter: blur(22px) saturate(190%) !important;
+        -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.09) !important;
+        border-radius: 20px !important;
+        padding: 24px 30px !important;
+        margin-bottom: 24px !important;
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
     }
-    .source-box {
-        background-color: #1e293b;
-        border-left: 4px solid #38bdf8;
-        border-radius: 4px;
-        padding: 8px 12px;
-        margin-top: 10px;
-        font-size: 0.85rem;
-        color: #cbd5e1;
+
+    .brand-title {
+        font-size: 2.35rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.035em !important;
+        background: linear-gradient(135deg, #ffffff 0%, #bae6fd 45%, #818cf8 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        display: inline-block !important;
+        margin: 0 !important;
+        line-height: 1.2 !important;
     }
-    .action-btn-row {
-        display: flex;
-        gap: 8px;
-        margin-top: 6px;
-        margin-bottom: 16px;
+
+    .brand-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        background: rgba(56, 189, 248, 0.09) !important;
+        border: 1px solid rgba(56, 189, 248, 0.22) !important;
+        border-radius: 9999px !important;
+        padding: 4px 13px !important;
+        font-size: 0.74rem !important;
+        font-weight: 600 !important;
+        color: #38bdf8 !important;
+        letter-spacing: 0.04em !important;
+        text-transform: uppercase !important;
+        backdrop-filter: blur(10px) !important;
     }
-    .stButton>button {
-        border-radius: 6px;
+
+    .brand-sub {
+        font-size: 0.92rem !important;
+        color: #94a3b8 !important;
+        margin-top: 8px !important;
+        line-height: 1.5 !important;
+    }
+
+    /* ── Chat Messages: Pure Frosted Glass Surface ────────────────────── */
+    [data-testid="stChatMessage"] {
+        background: rgba(15, 23, 42, 0.48) !important;
+        backdrop-filter: blur(18px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.075) !important;
+        border-radius: 18px !important;
+        padding: 18px 22px !important;
+        margin-bottom: 16px !important;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    [data-testid="stChatMessage"]:hover {
+        border-color: rgba(255, 255, 255, 0.14) !important;
+        box-shadow: 0 12px 38px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Subtle liquid accent for assistant message */
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
+        border-left: 3px solid rgba(56, 189, 248, 0.65) !important;
+    }
+
+    /* ── Sources Box: Liquid Glass Provenance ─────────────────────────── */
+    .source-glass-box {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.72) 0%, rgba(30, 41, 59, 0.45) 100%) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(56, 189, 248, 0.22) !important;
+        border-left: 4px solid #38bdf8 !important;
+        border-radius: 14px !important;
+        padding: 12px 18px !important;
+        margin-top: 14px !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* ── Sleek Glass Buttons ──────────────────────────────────────────── */
+    .stButton > button {
+        background: rgba(255, 255, 255, 0.04) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.09) !important;
+        border-radius: 12px !important;
+        color: #e2e8f0 !important;
+        font-weight: 500 !important;
+        font-size: 0.88rem !important;
+        padding: 6px 16px !important;
+        transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .stButton > button:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(56, 189, 248, 0.4) !important;
+        color: #38bdf8 !important;
+        box-shadow: 0 6px 22px rgba(56, 189, 248, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Primary Liquid Action Button */
+    .stButton > button[kind="primary"], .stButton > button[data-testid="baseButton-primary"] {
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        box-shadow: 0 6px 24px rgba(14, 165, 233, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+
+    .stButton > button[kind="primary"]:hover {
+        box-shadow: 0 8px 30px rgba(14, 165, 233, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    /* ── Floating Liquid Glass Dock for Chat Input ───────────────────── */
+    [data-testid="stChatInput"] {
+        background: rgba(13, 19, 36, 0.78) !important;
+        backdrop-filter: blur(24px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 14px 45px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+        transition: all 0.25s ease !important;
+    }
+
+    [data-testid="stChatInput"]:focus-within {
+        border-color: rgba(56, 189, 248, 0.55) !important;
+        box-shadow: 0 16px 50px rgba(56, 189, 248, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* ── Frosted Glass Tabs ───────────────────────────────────────────── */
+    button[data-baseweb="tab"] {
+        border-radius: 10px !important;
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        padding: 8px 18px !important;
+        color: #94a3b8 !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    button[data-baseweb="tab"]:hover {
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: #ffffff !important;
+    }
+
+    button[data-baseweb="tab"][aria-selected="true"] {
+        background: rgba(56, 189, 248, 0.12) !important;
+        backdrop-filter: blur(14px) !important;
+        border: 1px solid rgba(56, 189, 248, 0.35) !important;
+        color: #38bdf8 !important;
+        box-shadow: 0 4px 18px rgba(56, 189, 248, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    }
+
+    div[data-baseweb="tab-highlight"] {
+        display: none !important;
+    }
+
+    /* ── Metric Cards ─────────────────────────────────────────────────── */
+    [data-testid="stMetric"] {
+        background: rgba(15, 23, 42, 0.55) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        padding: 14px 18px !important;
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* ── Expanders ────────────────────────────────────────────────────── */
+    [data-testid="stExpander"] {
+        background: rgba(13, 19, 36, 0.5) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* ── Input Fields & Selectboxes ───────────────────────────────────── */
+    input[type="text"], textarea, .stSelectbox div[data-baseweb="select"] {
+        background: rgba(15, 23, 42, 0.6) !important;
+        backdrop-filter: blur(14px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        color: #f8fafc !important;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    input[type="text"]:focus, textarea:focus {
+        border-color: rgba(56, 189, 248, 0.5) !important;
+        box-shadow: 0 0 16px rgba(56, 189, 248, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    code, pre {
+        font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(56, 189, 248, 0.35);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -135,11 +339,13 @@ def get_cached_model(name: str):
 
 # Sidebar: App Mode Selector & Model Setup
 st.sidebar.markdown("""
-<div style="font-size:1.35rem; font-weight:800; color:#38bdf8; margin-bottom:4px;">
-    🤖 SURESH.GPT
-</div>
-<div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">
-    Local AI Assistant • RAG • LLM X-Ray
+<div style="background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)), rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; padding: 14px 18px; margin-bottom: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.35); backdrop-filter: blur(16px);">
+    <div style="font-size:1.35rem; font-weight:800; letter-spacing: -0.025em; background: linear-gradient(135deg, #ffffff 0%, #38bdf8 60%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        🤖 SURESH.GPT
+    </div>
+    <div style="font-size:0.78rem; color:#94a3b8; margin-top:3px; letter-spacing: 0.02em;">
+        Minimalist Local AI • RAG • LLM X-Ray
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -237,14 +443,8 @@ def render_localgpt_interface():
                     st.session_state["active_conv_id"] = remaining[0]["id"] if remaining else database.create_conversation("New Chat")
                 st.rerun()
 
-    # Rename active chat expander
     # Rename active chat expander (wrapped in st.form so Enter key saves immediately)
     with st.sidebar.expander("✏️ Rename Active Chat", expanded=False):
-        new_title = st.text_input("New Title", value=conv_meta.get("title", ""), key="title_rename_input")
-        if st.button("Save Title", key="save_title_btn"):
-            if new_title.strip():
-                database.update_conversation_title(conv_id, new_title.strip())
-                st.rerun()
         with st.form(key=f"rename_chat_form_{conv_id}", clear_on_submit=False):
             new_title = st.text_input("New Title (Press Enter to Save)", value=conv_meta.get("title", ""), key=f"title_rename_input_{conv_id}")
             save_title_submitted = st.form_submit_button("💾 Save Title", use_container_width=True)
@@ -304,9 +504,25 @@ def render_localgpt_interface():
         top_p = st.slider("Top-P", min_value=0.1, max_value=1.0, value=0.9, step=0.05)
         max_tokens = st.slider("Max Tokens", min_value=30, max_value=1024, value=256, step=16)
 
-    # ── Main Area: Chat Title & Header ───────────────────────────────────────
-    st.markdown('<div class="localgpt-title">🤖 SURESH.GPT</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="localgpt-sub">Active Chat: <b style="color:#e2e8f0;">{conv_meta.get("title", "New Chat")}</b> • ChatGPT-Style Local AI Assistant with Document RAG &amp; LLM X-Ray</div>', unsafe_allow_html=True)
+    # ── Main Area: Liquid Glass Hero Banner ──────────────────────────────────
+    st.markdown(f"""
+    <div class="glass-hero">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+                <h1 class="brand-title">🤖 SURESH.GPT</h1>
+                <div class="brand-sub">
+                    Topic: <b style="color: #f1f5f9;">{conv_meta.get("title", "New Chat")}</b> • ChatGPT-Style Local AI Assistant with Document RAG &amp; LLM X-Ray
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <span class="brand-badge">⚡ Qwen2.5</span>
+                <span class="brand-badge">📚 FAISS RAG</span>
+                <span class="brand-badge">🔬 Mechanistic X-Ray</span>
+                <span class="brand-badge" style="color: #34d399; border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.1);">🔒 100% On-Device</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Fetch Conversation Message History
     history = memory_mgr.get_history()
@@ -333,14 +549,19 @@ def render_localgpt_interface():
             with st.chat_message("assistant"):
                 st.markdown(content)
 
-                # Show document sources if present
+                # Show document sources if present (Liquid Glass Card)
                 if sources:
-                    st.markdown("""<div class="source-box"><b>📚 Sources:</b><br>""", unsafe_allow_html=True)
+                    st.markdown("""
+                    <div class="source-glass-box">
+                        <div style="font-weight: 700; color: #38bdf8; font-size: 0.85rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                            📚 <span>Verified Reference Sources (RAG)</span>
+                        </div>
+                    """, unsafe_allow_html=True)
                     for s in sources:
                         doc_name = s.get("source", "Document")
                         page_num = s.get("page", 1)
                         snippet = s.get("snippet", "")
-                        st.markdown(f"- 📄 **{doc_name}** — Page {page_num} *(excerpt: {snippet[:80]}...)*")
+                        st.markdown(f"- 📄 **`{doc_name}`** — Page {page_num} *(excerpt: \"{snippet[:85]}...\")*")
                     st.markdown("</div>", unsafe_allow_html=True)
 
                 # Action Controls: Copy, Regenerate, X-Ray
@@ -453,11 +674,16 @@ def render_localgpt_interface():
             )
             full_response = st.write_stream(stream_gen)
 
-            # Display sources if retrieved
+            # Display sources if retrieved (Liquid Glass Card)
             if retrieved_sources:
-                st.markdown("""<div class="source-box"><b>📚 Sources:</b><br>""", unsafe_allow_html=True)
+                st.markdown("""
+                <div class="source-glass-box">
+                    <div style="font-weight: 700; color: #38bdf8; font-size: 0.85rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                        📚 <span>Verified Reference Sources (RAG)</span>
+                    </div>
+                """, unsafe_allow_html=True)
                 for s in retrieved_sources:
-                    st.markdown(f"- 📄 **{s['source']}** — Page {s['page']} *(excerpt: {s['snippet'][:80]}...)*")
+                    st.markdown(f"- 📄 **`{s['source']}`** — Page {s['page']} *(excerpt: \"{s['snippet'][:85]}...\")*")
                 st.markdown("</div>", unsafe_allow_html=True)
 
             # Persist assistant response to database & memory
@@ -486,8 +712,25 @@ def render_localgpt_interface():
 # INTERFACE 2: LLM X-Ray Laboratory & Phases 1-3 Claim Verification
 # ==============================================================================
 def render_xray_lab_interface():
-    st.markdown('<div class="localgpt-title">🔬 LLM X-RAY LABORATORY</div>', unsafe_allow_html=True)
-    st.markdown('<div class="localgpt-sub">Deep Mechanistic Interpretability Lab • Autoregressive Diagnostics • Phases 1, 2, and 3 Verification</div>', unsafe_allow_html=True)
+    # ── Lab Hero Banner (Liquid Glass) ───────────────────────────────────────
+    st.markdown("""
+    <div class="glass-hero">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+                <h1 class="brand-title">🔬 LLM X-RAY LAB</h1>
+                <div class="brand-sub">
+                    Deep Mechanistic Interpretability • Internal Tensor Inspection • Phases 1, 2, and 3 Verification
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <span class="brand-badge">🧬 Embeddings PCA</span>
+                <span class="brand-badge">🎯 Attention Heatmap</span>
+                <span class="brand-badge">📊 Logits &amp; Softmax</span>
+                <span class="brand-badge" style="color: #a78bfa; border-color: rgba(167, 139, 250, 0.35); background: rgba(167, 139, 250, 0.1);">🔍 Phase 3 Verifier</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     with st.form(key="lab_prompt_form", clear_on_submit=False):
         col_inp1, col_inp2 = st.columns([3, 1])

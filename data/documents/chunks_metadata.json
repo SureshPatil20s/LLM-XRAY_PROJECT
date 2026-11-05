@@ -1,116 +1,14 @@
 [
   {
     "chunk_id": 1,
-    "text": "cademia.ai\nDay 15\nText Clustering and Topic Modeling\nAcademia.ai © 2026 | Text Clustering and Topic Modeling\n1",
-    "source": "DAY 15 - Topic Modeling.pdf",
+    "text": "Transformers are deep learning architectures introduced in 2017 by Vaswani et al.",
+    "source": "test_sample.txt",
     "page": 1
   },
   {
     "chunk_id": 2,
-    "text": "Although supervised techniques, such as\nclassification, have reigned supreme over the\nlast few years in the industry, the potential of\nunsupervised techniques such as text\nclustering cannot be understated. Text\nclustering aims to group similar texts based on\ntheir semantic content, meaning, and\nrelationships. \nAs illustrated in Figure 5-1, the resulting\nclusters of semantically similar documents not\nonly facilitate efficient categorization of large\nvolumes of unstructured text but also allow for\nquick exploratory data analysis.\n2",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 2
-  },
-  {
-    "chunk_id": 3,
-    "text": "The recent evolution of language models, which enable contextual and semantic representations of\ntext, has enhanced the effectiveness of text clustering. Language is more than a bag of words, and\nrecent language models have proved to be quite capable of capturing that notion. Text clustering,\nunbound by supervision, allows for creative solutions and diverse applications, such as finding outliers,\nspeedup labeling, and finding incorrectly labeled data.\nText clustering has also found itself in the realm of topic modeling, where we want to discover\n(abstract) topics that appear in large",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 3
-  },
-  {
-    "chunk_id": 4,
-    "text": "lf in the realm of topic modeling, where we want to discover\n(abstract) topics that appear in large collections of textual data. As shown in Figure 5-2, we generally\ndescribe a topic using keywords or keyphrases and, ideally, have a single overarching label.\n3",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 3
-  },
-  {
-    "chunk_id": 5,
-    "text": "Text clustering allows for discovering patterns in data that you may or may not be familiar with. It\nallows for getting an intuitive understanding of the task, for example, a classification task, but also of its\ncomplexity. As a result, text clustering can become more than just a quick method for exploratory data\nanalysis. Although there are many methods for text clustering, from graph-based neural net works to\ncentroid-based clustering techniques, a common pipeline that has gained popularity involves three\nsteps and algorithms: \n1.",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 4
-  },
-  {
-    "chunk_id": 6,
-    "text": "ng techniques, a common pipeline that has gained popularity involves three\nsteps and algorithms: \n1. Convert the input documents to embeddings with an embedding model. \n2. Reduce the dimensionality of embeddings with a dimensionality reduction model. \n3. Find groups of semantically similar documents with a cluster model.\nA Common Pipeline for Text Clustering\n4",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 4
-  },
-  {
-    "chunk_id": 7,
-    "text": "The first step is to convert our textual data to embeddings, as illustrated in Figure 5-3. Recall from\nprevious chapters that embeddings are numerical representations of text that attempt to capture its\nmeaning.\nEmbedding Documents\nChoosing embedding models optimized for semantic similarity tasks is especially important for\nclustering as we attempt to find groups of semantically similar documents. Fortunately, most\nembedding models at the time of writing focus on just that, semantic similarity\n5",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 5
-  },
-  {
-    "chunk_id": 8,
-    "text": "Reducing the Dimensionality of Embeddings\nBefore we cluster the embeddings, we will first need to take their high dimensionality into account. As\nthe number of dimensions increases, there is an exponential growth in the number of possible values\nwithin each dimension. Finding all subspaces within each dimension becomes increasingly complex. As\na result, high-dimensional data can be troublesome for many clustering tech niques as it gets more\ndifficult to identify meaningful clusters. Instead, we can make use of dimensionality reduction.",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 6
-  },
-  {
-    "chunk_id": 9,
-    "text": "ore\ndifficult to identify meaningful clusters. Instead, we can make use of dimensionality reduction. \nAs illustrated in Figure 5-4, this technique allows us to reduce the size of the dimensional space and\nrepresent the same data with fewer dimensions. Dimensionality reduction techniques aim to preserve\nthe global structure of high-dimensional data by finding low-dimensional representations.\n6",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 6
-  },
-  {
-    "chunk_id": 10,
-    "text": "Note that this is a compression technique and that the underlying algorithm is not arbitrarily removing\ndimensions. To help the cluster model create meaningful clus ters, the second step in our clustering\npipeline is therefore dimensionality reduction, as shown in Figure 5-5.\n7",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 7
-  },
-  {
-    "chunk_id": 11,
-    "text": "The third step is to cluster the reduced embeddings, as illustrated in Figure 5-6\nCluster the Reduced Embeddings\nAlthough a common choice is a centroid-based algorithm like k-means, which requires a set of clusters\nto be generated, we do not know the number of clusters beforehand. Instead, a density-based\nalgorithm freely calculates the number of clus ters and does not force all data points to be part of a\ncluster, as illustrated in Figure 5-7. 8",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 8
-  },
-  {
-    "chunk_id": 12,
-    "text": "From Text Clustering to Topic Modeling\nText clustering is a powerful tool for finding structure among large collections of documents. In our\nprevious example, we could manually inspect each cluster and identify them based on their\ncollection of documents. For instance, we explored a cluster that contained documents about sign\nlanguage. We could say that the topic of that cluster is “sign language.” \nThis idea of finding themes or latent topics in a collection of textual data is often referred to as\ntopic modeling.",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 9
-  },
-  {
-    "chunk_id": 13,
-    "text": "ding themes or latent topics in a collection of textual data is often referred to as\ntopic modeling. Traditionally, it involves finding a set of keywords or phrases that best represent\nand capture the meaning of the topic, as we illustrate in Figure 5-9\n9",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 9
-  },
-  {
-    "chunk_id": 14,
-    "text": "Instead of labeling a topic as “sign language,” these techniques use keywords such as “sign,”\n“language,” and “translation” to describe the topic. As such, this does not give a single label to a\ntopic and instead requires the user to understand the meaning of the topic through those\nkeywords. \nClassic approaches, like latent Dirichlet allocation, assume that each topic is charac terized by a\nprobability distribution of words in a corpus’s vocabulary.5 Figure 5-10 demonstrates how each\nword in a vocabulary is scored against its relevance to each topic.\n10",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 10
-  },
-  {
-    "chunk_id": 15,
-    "text": "These approaches generally use a bag-of-words technique for the main features of the textual data,\nwhich does not take the context nor the meaning of words and phrases into account. In contrast,\nour text clustering example does take both into account as it relies on Transformer-based\nembeddings that are optimized for semantic similarity and contextual meaning through attention. \nIn this section, we will extend text clustering into the realm of topic modeling through a highly\nmodular text clustering and topic modeling framework, namely BERTopic.\n11",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 11
-  },
-  {
-    "chunk_id": 16,
-    "text": "BERTopic: A Modular Topic Modeling Framework\nBERTopic is a topic modeling technique that leverages clusters of semantically similar texts to\nextract various types of topic representations.6 The underlying algorithm can be thought of in two\nsteps. \nFirst, as illustrated in Figure 5-11, we follow the same procedure as we did before in our text\nclustering example. We embed documents, reduce their dimensionality, and finally cluster the\nreduced embedding to create groups of semantically similar documents.\n12",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 12
-  },
-  {
-    "chunk_id": 17,
-    "text": "Second, it models a distribution over words in the corpus’s vocabulary by leveraging a classic\nmethod, namely bag-of-words. The bag-of-words, as we discussed briefly in Chapter 1 and\nillustrate in Figure 5-12, does exactly what its name implies, counting the number of times each\nword appears in a document. The resulting representation could be used to extract the most\nfrequent words inside a document.\n13",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 13
-  },
-  {
-    "chunk_id": 18,
-    "text": "There are two caveats, however. First, this is a representation on a document level and we are\ninterested in a cluster-level perspective. To address this, the frequency of words is calculated\nwithin the entire cluster instead of only the document, as illustrated in Figure 5-13\n14",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 14
-  },
-  {
-    "chunk_id": 19,
-    "text": "Course 1 \nLarge Language Models (LLMs) & Agentic AI \nAcademia.ai © 2026 | Text Clustering and Topic Modeling\n█████████████░░░░░░░░░░░░ Completed: 50% / 100%\n15",
-    "source": "DAY 15 - Topic Modeling.pdf",
-    "page": 15
+    "text": "17 by Vaswani et al. They rely on multi-head self-attention mechanisms.",
+    "source": "test_sample.txt",
+    "page": 1
   }
 ]

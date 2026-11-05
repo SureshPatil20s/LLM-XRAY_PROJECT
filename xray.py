@@ -59,8 +59,26 @@ def render_xray_panel(xray_data: Dict[str, Any], key_prefix: str = "xray") -> No
         st.warning("⚠️ No X-Ray data available for this generation.")
         return
 
-    st.markdown("### 🔬 LLM X-Ray Inspection")
-    st.caption("Deep internal inspection of embeddings, attention mechanisms, hidden states, and next-token logits.")
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)), rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 16px; padding: 18px 24px; margin: 16px 0 20px 0; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0,0,0,0.37);">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.5rem;">🔬</span>
+                <div>
+                    <div style="font-weight: 800; font-size: 1.15rem; background: linear-gradient(135deg, #ffffff 0%, #38bdf8 60%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        LLM X-Ray Mechanistic Inspection
+                    </div>
+                    <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 2px;">
+                        Internal tensor diagnostics for this generation
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 6px;">
+                <span style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 9999px; padding: 3px 12px; font-size: 0.75rem; color: #38bdf8; font-weight: 600;">Active Inspection</span>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     tab_tok, tab_emb, tab_lay, tab_attn, tab_hid, tab_log = st.tabs([
         "🔤 Tokens",
