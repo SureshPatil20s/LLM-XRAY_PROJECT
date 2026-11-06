@@ -1,8 +1,8 @@
 """
-Conversation Memory and Context Builder for LocalGPT.
+Conversation Memory and Context Builder for LocalGPT Pro.
 Manages:
 1. Short-term active conversation context & window management.
-2. Long-term conversation persistence via database.
+2. Long-term conversation persistence via database with per-user data isolation.
 3. System prompt and RAG context injection into message history.
 """
 from typing import List, Dict, Any, Optional
@@ -10,11 +10,12 @@ import database
 
 
 class ConversationMemory:
-    def __init__(self, conversation_id: Optional[str] = None):
+    def __init__(self, conversation_id: Optional[str] = None, uid: str = "local_default_user"):
+        self.uid = uid
         if conversation_id:
             self.conversation_id = conversation_id
         else:
-            self.conversation_id = database.create_conversation("New Chat")
+            self.conversation_id = database.create_conversation("New Chat", uid=self.uid)
 
     def get_id(self) -> str:
         return self.conversation_id
@@ -31,10 +32,11 @@ class ConversationMemory:
         history = self.get_history()
         msg_id = database.add_message(self.conversation_id, role="user", content=content)
         
-        # If this is the first user message, generate title from content
+        # If this is the first user message, generate concise title from content
         if len(history) == 0 or (len(history) == 1 and history[0]["role"] == "system"):
-            clean_title = content.strip().split("\n")[0][:36]
-            if len(content.strip().split("\n")[0]) > 36:
+            first_line = content.strip().split("\n")[0]
+            clean_title = first_line[:36]
+            if len(first_line) > 36:
                 clean_title += "..."
             database.update_conversation_title(self.conversation_id, clean_title)
             
@@ -77,7 +79,6 @@ class ConversationMemory:
         """
         messages: List[Dict[str, str]] = []
         
-        # 1. System Prompt + RAG Context
         full_system = system_prompt.strip()
         if rag_context.strip():
             full_system += (
@@ -88,13 +89,9 @@ class ConversationMemory:
         
         messages.append({"role": "system", "content": full_system})
 
-        # 2. Fetch history and trim to window
         history = self.get_history()
-        
-        # Filter out system messages from history to avoid duplicates
         chat_turns = [m for m in history if m["role"] in ("user", "assistant")]
         
-        # Keep last max_history_turns turns
         if max_history_turns and len(chat_turns) > max_history_turns * 2:
             chat_turns = chat_turns[-(max_history_turns * 2):]
 
@@ -105,4 +102,3 @@ class ConversationMemory:
             })
 
         return messages
-

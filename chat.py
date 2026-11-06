@@ -1,8 +1,8 @@
 """
-Chat orchestration module for LocalGPT.
+Chat orchestration module for LocalGPT Pro.
 Handles:
 1. Multi-turn conversation context building
-2. RAG retrieval integration
+2. RAG retrieval integration with per-user document isolation
 3. Real-time streaming generation using TextIteratorStreamer
 4. X-Ray capture integration
 5. Message regeneration and editing
@@ -13,7 +13,7 @@ import torch
 from transformers import TextIteratorStreamer
 
 from memory import ConversationMemory
-from rag import retrieve_context
+import rag
 from xray import capture_xray
 
 
@@ -28,11 +28,12 @@ def stream_chat_response(
     top_p: float = 0.9,
     max_new_tokens: int = 512,
     use_rag: bool = True,
-    device: str = "cpu"
+    device: str = "cpu",
+    uid: Optional[str] = None
 ) -> Tuple[Generator[str, None, None], List[Dict[str, Any]]]:
     """
     Sets up streaming response generation for the user query.
-    1. Optionally retrieves document context via RAG.
+    1. Optionally retrieves document context via RAG for the specific user.
     2. Builds formatted conversation context.
     3. Spawns generation in a background thread with TextIteratorStreamer.
     4. Yields streamed tokens in real time.
@@ -44,7 +45,7 @@ def stream_chat_response(
     sources_list: List[Dict[str, Any]] = []
     if use_rag:
         try:
-            rag_context, sources_list = retrieve_context(user_query, top_k=4)
+            rag_context, sources_list = rag.retrieve_context(user_query, top_k=4, uid=uid)
         except Exception as e:
             print(f"[RAG Warning] Retrieval error: {e}")
 
@@ -114,4 +115,3 @@ def generate_single_turn_with_xray(
 ) -> Dict[str, Any]:
     """Runs a single forward pass and returns complete X-Ray inspection data."""
     return capture_xray(model, tokenizer, prompt, device=device)
-

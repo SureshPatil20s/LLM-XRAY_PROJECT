@@ -1,0 +1,18 @@
+# Local Environment & Secrets
+.env
+serviceAccountKey.json
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# User data
+data/users/
+data/documents/*.bin
+data/documents/*.json
+data/conversations/*.db
+experiments/*.json
+
+# Virtual Environment
+venv/
+.venv/
+

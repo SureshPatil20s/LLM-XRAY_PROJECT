@@ -9,3 +9,11 @@ faiss-cpu
 sentence-transformers
 pypdf
 python-docx
+firebase-admin
+python-dotenv
+streamlit-option-menu
+sqlalchemy
+reportlab
+scikit-learn
+sympy
+requests

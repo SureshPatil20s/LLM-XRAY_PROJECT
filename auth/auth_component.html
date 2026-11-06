@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Firebase Auth Component</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: transparent; color: #e2e8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 10px; }
+    .auth-card {
+      width: 100%; max-width: 440px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .auth-header { text-align: center; margin-bottom: 24px; }
+    .auth-header h1 {
+      font-size: 1.8rem; font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 0%, #38bdf8 60%, #818cf8 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .auth-header p { font-size: 0.88rem; color: #94a3b8; }
+    .btn-google {
+      width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px; padding: 12px; color: #f8fafc; font-weight: 600; font-size: 0.95rem;
+      cursor: pointer; transition: all 0.2s ease; margin-bottom: 20px;
+    }
+    .btn-google:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(56, 189, 248, 0.4); transform: translateY(-1px); }
+    .divider { display: flex; align-items: center; text-align: center; margin: 18px 0; color: #64748b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .divider span { padding: 0 12px; }
+    .tabs { display: flex; background: rgba(0, 0, 0, 0.25); border-radius: 10px; padding: 4px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 8px; border: none; background: transparent; color: #94a3b8; font-weight: 600; font-size: 0.88rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+    .form-group input {
+      width: 100%; padding: 12px 14px; background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #f8fafc;
+      font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); }
+    .btn-submit {
+      width: 100%; padding: 12px; margin-top: 10px;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.9) 0%, rgba(99, 102, 241, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 10px;
+      color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35); transition: all 0.2s;
+    }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5); }
+    .auth-footer { margin-top: 18px; text-align: center; font-size: 0.84rem; color: #94a3b8; }
+    .auth-link { color: #38bdf8; text-decoration: none; cursor: pointer; font-weight: 600; }
+    .auth-link:hover { text-decoration: underline; }
+    .msg-box { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; display: none; }
+    .msg-box.error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #fca5a5; display: block; }
+    .msg-box.success { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.35); color: #86efac; display: block; }
+  </style>
+
+  <!-- Firebase Web SDK Compat scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>◆ SURESH.GPT Pro</h1>
+      <p>Your private, high-performance local AI assistant</p>
+    </div>
+
+    <button id="btnGoogle" class="btn-google">
+      <svg width="18" height="18" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <div class="divider"><span>or continue with email</span></div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Log In</button>
+      <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- Login / Signup Form -->
+    <form id="authForm" onsubmit="handleFormSubmit(event)">
+      <div class="form-group" id="nameGroup" style="display: none;">
+        <label for="displayName">Full Name</label>
+        <input type="text" id="displayName" placeholder="Priya Sharma" autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label for="emailInput">Email Address</label>
+        <input type="email" id="emailInput" placeholder="name@domain.com" required autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput" placeholder="••••••••" required autocomplete="current-password" minlength="8">
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-submit">Log In</button>
+    </form>
+
+    <div id="statusMsg" class="msg-box"></div>
+
+    <div class="auth-footer">
+      <span id="forgotPwdWrap">
+        <a class="auth-link" onclick="handleForgotPassword()">Forgot password?</a>
+      </span>
+    </div>
+  </div>
+
+  <script>
+    // Streamlit Component integration setup
+    function sendMessageToStreamlit(value) {
+      if (window.parent && window.parent.postMessage) {
+        window.parent.postMessage({
+          isStreamlitMessage: true,
+          type: "streamlit:setComponentValue",
+          value: value
+        }, "*");
+      }
+    }
+
+    let currentMode = "login";
+    let firebaseApp = null;
+    let auth = null;
+
+    // Load Firebase Web Config if passed
+    window.addEventListener("message", function(event) {
+      if (event.data && event.data.type === "streamlit:render") {
+        const config = event.data.args && event.data.args.firebaseConfig;
+        if (config && config.apiKey && !firebaseApp) {
+          try {
+            firebaseApp = firebase.initializeApp(config);
+            auth = firebase.auth();
+            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            
+            // Listen for auth state
+            auth.onAuthStateChanged(function(user) {
+              if (user) {
+                user.getIdToken(true).then(function(token) {
+                  sendMessageToStreamlit({
+                    token: token,
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    emailVerified: user.emailVerified
+                  });
+                });
+              }
+            });
+          } catch(err) {
+            console.error("Firebase init error:", err);
+          }
+        }
+      }
+    });
+
+    function showStatus(text, isError) {
+      const box = document.getElementById("statusMsg");
+      box.textContent = text;
+      box.className = "msg-box " + (isError ? "error" : "success");
+    }
+
+    function switchTab(mode) {
+      currentMode = mode;
+      document.getElementById("tabLogin").className = "tab-btn " + (mode === "login" ? "active" : "");
+      document.getElementById("tabSignup").className = "tab-btn " + (mode === "signup" ? "active" : "");
+      document.getElementById("nameGroup").style.display = mode === "signup" ? "block" : "none";
+      document.getElementById("submitBtn").textContent = mode === "login" ? "Log In" : "Create Account";
+      document.getElementById("forgotPwdWrap").style.display = mode === "login" ? "inline" : "none";
+      document.getElementById("statusMsg").className = "msg-box";
+    }
+
+    document.getElementById("btnGoogle").onclick = function() {
+      if (!auth) {
+        // Mock fallback for direct test
+        sendMessageToStreamlit({
+          devLogin: true,
+          provider: "google",
+          email: "google.user@localgpt.pro",
+          name: "Google User"
+        });
+        return;
+      }
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).then(function(res) {
+        return res.user.getIdToken(true);
+      }).then(function(token) {
+        showStatus("Google authentication successful!", false);
+      }).catch(function(err) {
+        showStatus(err.message, true);
+      });
+    };
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById("emailInput").value.trim();
+      const pwd = document.getElementById("passwordInput").value;
+      const name = document.getElementById("displayName").value.trim();
+
+      if (!auth) {
+        // Mock fallback for direct local test
+        sendMessageToStreamlit({
+          devLogin: true,
+          provider: "email",
+          email: email,
+          name: name || email.split("@")[0]
+        });
+        return;
+      }
+
+      if (currentMode === "login") {
+        auth.signInWithEmailAndPassword(email, pwd)
+          .then(function(cred) {
+            showStatus("Welcome back! Loading workspace...", false);
+          })
+          .catch(function(err) {
+            showStatus(err.message, true);
+          });
+      } else {
+        auth.createUserWithEmailAndPassword(email, pwd)
+          .then(function(cred) {
+            return cred.user.updateProfile({ displayName: name }).then(function() {
+              return cred.user.sendEmailVerification();
+            });
+          })
+          .then(function() {
+            showStatus("Account created! Verification link sent to your email.", false);
+          })
+          .catch(function(err) {
+            showStatus(err.message, true);
+          });
+      }
+    }
+
+    function handleForgotPassword() {
+      const email = document.getElementById("emailInput").value.trim();
+      if (!email) {
+        showStatus("Please enter your email above to receive a reset link.", true);
+        return;
+      }
+      if (auth) {
+        auth.sendPasswordResetEmail(email)
+          .then(function() {
+            showStatus("Password reset email sent! Check your inbox.", false);
+          })
+          .catch(function(err) {
+            showStatus(err.message, true);
+          });
+      } else {
+        showStatus("Password reset link sent (demo mode).", false);
+      }
+    }
+  </script>
+</body>
+</html>
+
