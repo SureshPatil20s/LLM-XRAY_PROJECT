@@ -1,103 +1,145 @@
-# 🤖 SURESH.GPT Pro (LocalGPT Pro) — Multi-User Local AI Assistant with RAG & LLM X-Ray
+# 🤖 SureshGPT — Phase 3: ChatGPT-Style AI Platform
 
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-ee4c2c.svg)](https://pytorch.org/)
-[![HuggingFace](https://img.shields.io/badge/HuggingFace-Transformers-yellow.svg)](https://huggingface.co/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.36%2B-ff4b4b.svg)](https://streamlit.io/)
-[![FAISS](https://img.shields.io/badge/FAISS-CPU-green.svg)](https://github.com/facebookresearch/faiss)
-[![Firebase](https://img.shields.io/badge/Firebase-Admin%20%26%20Auth-orange.svg)](https://firebase.google.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.4-black.svg?logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.3-blue.svg?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC.svg?logo=tailwind-css)](https://tailwindcss.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Groq Cloud](https://img.shields.io/badge/Groq-LPU_Hosted_Inference-F55036.svg)](https://groq.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Ready-336791.svg?logo=postgresql)](https://www.postgresql.org/)
 
-**SURESH.GPT Pro (Phase 3: LocalGPT Pro)** is a secure, multi-user local AI assistant. It integrates ChatGPT-style conversational capabilities, persistent per-user document RAG (Retrieval-Augmented Generation), Firebase Authentication for identity, and deep mechanistic interpretability via the **LLM X-Ray Laboratory**.
-
----
-
-## 🌟 What's New in Phase 3 (LocalGPT Pro)
-
-| Capability | Phase 2 (LocalGPT) | Phase 3 (LocalGPT Pro) |
-|---|---|---|
-| **Identity & Access** | Single local user | **Firebase Authentication** (Google Sign-In, Email/Password, Password Reset, Email Verification) |
-| **Data Isolation** | Shared conversations & index | **Strict Per-User Isolation**: Chats, messages, document uploads, and FAISS vector indices are private to each user |
-| **UI Aesthetics** | Basic dark theme | **Minimalism + Liquid Glass + Glassmorphism**: Light/Dark theme switch, custom avatars, floating chat dock |
-| **Welcome Experience** | Empty chat screen | **Dynamic Greeting** ("Good evening, Suresh") + 4 interactive suggested prompt cards |
-| **Document Management**| Sidebar file uploader | **Dedicated Document Library**: Multi-file drag-and-drop, stage progress bar, page/chunk counts, deletion |
-| **Conversation Organization** | Simple list | **Search box**, **Pinned chats**, and **Date groupings** (Today, Yesterday, Previous 7 Days, Older) |
-| **Chat Export** | None | **Export to Markdown (.md)** and **Formatted PDF (.pdf)** via ReportLab |
-| **LLM X-Ray Access** | Fixed inspection panel | **Inline Collapsible Side Drawer** next to individual messages + Full 11-tab Mechanistic Lab |
-| **User Preferences** | Session-only settings | **Persistent User Settings**: Custom default system prompt, temperature, top-k, top-p, and max tokens |
+An enterprise-grade, multi-user ChatGPT-style web platform built with **Next.js (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS**, and a high-performance **FastAPI** backend. Powered by hosted cloud LLMs (**Groq Cloud**, **Llama 3.3 70B**, **Qwen 2.5 32B**) with zero local GPU required.
 
 ---
 
-## 🏗️ Architecture & Security Model
+## 🚀 How to Run the Project
 
+### Option 1: 1-Click Launch (Windows — Recommended)
+Simply double-click the launch script in the project root:
+```cmd
+run_phase3.bat
 ```
-Browser / Streamlit UI
-  │
-  ├─► [Firebase Auth Web / Admin SDK] ──► Token Verification (Backend never trusts raw UID)
-  │
-  └─► Local Laptop Runtime (100% On-Device AI)
-        ├── Qwen2.5 Local LLM (0.5B CPU fallback / 1.5B GPU)
-        ├── SQLite DB (localgpt.db with users, conversations, messages, documents, settings)
-        └── data/users/<firebase_uid>/
-              ├── documents/     (User's uploaded PDF/TXT/DOCX)
-              ├── faiss_index/   (User's private FAISS IndexFlatIP & chunks)
-              └── exports/       (Generated Markdown & ReportLab PDFs)
-```
-
-> **Security Guarantee:** Firebase is used **only** for identity and token authentication. Prompts, document contents, embeddings, model weights, and conversation histories never leave your laptop.
+This automatically starts both the **FastAPI Backend** and the **Next.js Frontend** in separate terminal windows.
 
 ---
 
-## 🚀 Quick Start Guide
+### Option 2: Manual Terminal Launch
 
-### 1. Installation
-
+#### Step 1: Start the FastAPI Backend
+Open a terminal in the project root and run:
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/LLM-XRAY_PROJECT.git
-cd LLM-XRAY_PROJECT
-
-# Install dependencies
-pip install -r requirements.txt
+python -m uvicorn server.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
+- **Backend API:** [http://localhost:8000](http://localhost:8000)
+- **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Health Check:** [http://localhost:8000/health](http://localhost:8000/health)
 
-### 2. Configure Firebase (Optional for Live Firebase Auth)
-
-Copy `.env.example` to `.env`:
+#### Step 2: Start the Next.js Frontend
+Open a second terminal, navigate into the `client` directory, and start the development server:
 ```bash
-cp .env.example .env
+cd client
+npm run dev
 ```
-Fill in your Firebase Web App credentials in `.env` and place your `serviceAccountKey.json` in the project root:
-```env
-FIREBASE_API_KEY=your_api_key_here
-FIREBASE_AUTH_DOMAIN=localgpt-pro.firebaseapp.com
-FIREBASE_PROJECT_ID=localgpt-pro
-FIREBASE_APP_ID=1:1234567890:web:abcdef
-GOOGLE_APPLICATION_CREDENTIALS=serviceAccountKey.json
-```
+- **Web Application:** [http://localhost:3000](http://localhost:3000)
 
-*(Note: If Firebase credentials are not yet configured, the app includes a seamless built-in offline test switcher with personas like Suresh and Priya to test data isolation immediately!)*
+---
 
-### 3. Launch the Application
+## ⚙️ Configuration (`.env`)
 
-```bash
-streamlit run app.py
+In the project root, open [.env](file:///c:/Users/sures/Desktop/Academia/LLM-XRAY_PROJECT/.env):
+
+```ini
+# 1. Groq Hosted LLM API Key (Free at https://console.groq.com/keys)
+# If left blank, the platform runs in local simulation mode for testing
+GROQ_API_KEY=gsk_your_groq_api_key_here
+
+# 2. Default Model
+DEFAULT_MODEL=llama-3.3-70b-versatile
+
+# 3. Database (Optional for Cloud PostgreSQL)
+# Leave blank to automatically use local SQLite (zero configuration needed)
+# Or enter a PostgreSQL connection string (e.g. Supabase, Neon, Render):
+# DATABASE_URL=postgresql://user:password@host:5432/dbname
+
+# 4. Security
+SECRET_KEY=suresh_gpt_super_secret_jwt_key_2026_phase3_production
 ```
 
 ---
 
-## 🧪 Testing and Verification
+## 🌟 Core Features
 
-Run the full automated test suites:
+### 1. Modern ChatGPT-Style UI (No Streamlit)
+- Sleek ChatGPT dark theme (`#121212`, `#212121`, emerald accents).
+- Sidebar with **+ New chat**, real-time search, pinned chats, and date-sorted conversation history.
+- Markdown and code block syntax highlighting with **1-click Copy Code** feedback.
+- Message actions: Copy full response, Regenerate answer, and Thumbs Up / Down rating.
+
+### 2. Hosted LLM Inference & Free Multimodal Models
+- **Llama 3.3 70B & Qwen 2.5 32B:** Ultra-fast streaming (300+ tokens/sec) via Groq Cloud API.
+- **AI Image Generator (Free Turbo):** Type `/image <prompt>` to generate 1024×1024 high-resolution images inline with zero API key required.
+- **Multimodal Vision & OCR:** Attach images (`.png`, `.jpg`, `.jpeg`, `.webp`) for automatic text extraction, document transcription, and visual analysis.
+
+### 3. Document Knowledge Base (RAG)
+- Multi-format file ingestion supporting **PDF, DOCX, TXT, CSV, and JSON**.
+- User-isolated semantic retrieval with provenance citation chips showing exact file name, page numbers, similarity scores, and source excerpts.
+- Real-time **RAG Toggle** switch in the top header to enable or disable document retrieval on the fly.
+
+### 4. Authentication & Data Privacy
+- **User Registration & Login:** Salted bcrypt password hashing with JWT access tokens.
+- **Google OAuth:** 1-click Google authentication integration.
+- **Ephemeral Guest Mode:** Visitors can chat immediately without logging in; guest chats remain temporary and do not clutter the database.
+- **Persistent Storage:** Registered users get persistent, cross-device conversation histories stored in PostgreSQL / SQLite.
+
+---
+
+## 🧪 Testing & Verification
+
+Run the automated end-to-end test suite to verify all backend routes, auth flows, streaming, and RAG retrieval:
 
 ```bash
-# 1. Phase 3 LocalGPT Pro Multi-User & Export Test Suite
-python test_phase3_localgpt_pro.py
-
-# 2. Phase 2 LocalGPT Pipeline Tests
-python test_localgpt_pipeline.py
-
-# 3. Phase 1 Mechanistic & Claim Verification Tests
-python test_phase3_verification.py
+python test_phase3_e2e.py
 ```
 
-All tests execute on CPU with zero network dependency on external LLM APIs.
+Test coverage includes:
+- `✓ Health Check & Model Catalog`
+- `✓ Bcrypt Registration & JWT Login`
+- `✓ Google OAuth Sign-In`
+- `✓ Guest Seamless Session`
+- `✓ Multi-format Document Ingestion & Chunking`
+- `✓ Real-time SSE Chat Streaming with RAG Provenance Citations`
+- `✓ Free Image Generation (Turbo Diffusion)`
+- `✓ Free Vision & OCR (Llama 3.2 Vision)`
+
+---
+
+## 📁 Project Structure
+
+```text
+LLM-XRAY_PROJECT/
+├── client/                     # Next.js 16 + React 19 + TypeScript Frontend
+│   ├── src/
+│   │   ├── app/                # App router (page.tsx, layout.tsx, globals.css)
+│   │   ├── components/         # Sidebar, Navbar, ChatArea, ChatInput, Modals
+│   │   ├── context/            # AuthContext (JWT & session state)
+│   │   ├── lib/                # API client with SSE streaming reader
+│   │   └── types/              # Strict TypeScript interfaces
+│   └── package.json
+│
+├── server/                     # FastAPI Python Backend
+│   └── app/
+│       ├── api/                # auth.py, chat.py, documents.py routers
+│       ├── core/               # config.py, security.py (JWT + bcrypt)
+│       ├── db/                 # session.py (PostgreSQL & SQLite engine)
+│       ├── models/             # entities.py (SQLAlchemy ORM models)
+│       ├── schemas/            # schemas.py (Pydantic v2 validation models)
+│       ├── services/           # llm_service.py (Groq & Image), rag_service.py
+│       └── main.py             # FastAPI application entry point
+│
+├── run_phase3.bat              # 1-Click Windows launcher for both servers
+├── run_backend.bat             # FastAPI backend runner script
+├── run_frontend.bat            # Next.js frontend runner script
+├── test_phase3_e2e.py          # Automated verification test suite
+├── .env                        # Environment configuration
+└── README.md                   # Project documentation
+```
