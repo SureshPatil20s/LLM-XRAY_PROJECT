@@ -10,8 +10,10 @@ import sqlite3
 import os
 import json
 import uuid
+import hashlib
+import secrets
 from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 DB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "conversations")
 DB_PATH = os.path.join(DB_DIR, "localgpt.db")
@@ -63,6 +65,14 @@ def init_db() -> None:
             cursor.execute("ALTER TABLE conversations ADD COLUMN uid TEXT NOT NULL DEFAULT 'local_default_user'")
         if "pinned" not in columns:
             cursor.execute("ALTER TABLE conversations ADD COLUMN pinned INTEGER DEFAULT 0")
+
+        # Check if password_hash and salt exist in users
+        cursor.execute("PRAGMA table_info(users)")
+        user_columns = [row["name"] for row in cursor.fetchall()]
+        if "password_hash" not in user_columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN password_hash TEXT")
+        if "salt" not in user_columns:
+            cursor.execute("ALTER TABLE users ADD COLUMN salt TEXT")
 
         # 3. Messages table
         conn.execute("""
@@ -196,6 +206,137 @@ def get_user_profile(uid: str) -> Optional[Dict[str, Any]]:
     row = cursor.fetchone()
     conn.close()
     return dict(row) if row else None
+
+
+def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
+    """Fetches user profile by email."""
+    init_db()
+    conn = _get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE LOWER(email) = ?", (email.strip().lower(),))
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+
+def hash_password(password: str, salt: str) -> str:
+    """Computes SHA-256 salted password hash."""
+    return hashlib.sha256((salt + password).encode('utf-8')).hexdigest()
+
+
+def register_user(email: str, password: str, display_name: Optional[str] = None) -> Tuple[bool, str, Optional[Dict[str, Any]]]:
+    """
+    Registers a new user with email, hashed password, and display name.
+    Returns (success, message, user_profile).
+    """
+    init_db()
+    norm_email = email.strip().lower()
+    existing = get_user_by_email(norm_email)
+    if existing:
+        return False, "An account with this email already exists. Please log in.", None
+
+    uid = "usr_" + secrets.token_hex(8)
+    salt = secrets.token_hex(16)
+    pwd_hash = hash_password(password, salt)
+    name = display_name.strip() if (display_name and display_name.strip()) else norm_email.split("@")[0].title()
+    photo_url = f"https://api.dicebear.com/7.x/bottts/svg?seed={uid}"
+    now = datetime.now(timezone.utc).isoformat()
+
+    conn = _get_connection()
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO users (uid, email, display_name, photo_url, provider, created_at, last_login, password_hash, salt)
+            VALUES (?, ?, ?, ?, 'email', ?, ?, ?, ?)
+        """, (uid, norm_email, name, photo_url, now, now, pwd_hash, salt))
+
+        cursor.execute("""
+            INSERT OR IGNORE INTO settings (uid, temperature, top_k, top_p, max_tokens)
+            VALUES (?, 0.7, 50, 0.9, 256)
+        """, (uid,))
+    conn.close()
+
+    set_last_active_uid(uid)
+    return True, "Account registered successfully!", get_user_profile(uid)
+
+
+def authenticate_user(email: str, password: str) -> Tuple[bool, str, Optional[Dict[str, Any]]]:
+    """
+    Validates user credentials against stored salted hash.
+    Returns (success, message, user_profile).
+    """
+    init_db()
+    norm_email = email.strip().lower()
+    user = get_user_by_email(norm_email)
+    if not user:
+        return False, "No account found with this email. Please register first.", None
+
+    if user.get("provider") == "google" and not user.get("password_hash"):
+        return False, "This account was created with Google. Please use 'Continue with Google'.", None
+
+    stored_hash = user.get("password_hash")
+    salt = user.get("salt")
+    if not stored_hash or not salt:
+        # Fallback for dev users created without password
+        now = datetime.now(timezone.utc).isoformat()
+        conn = _get_connection()
+        with conn:
+            conn.execute("UPDATE users SET last_login = ? WHERE uid = ?", (now, user["uid"]))
+        conn.close()
+        set_last_active_uid(user["uid"])
+        return True, "Login successful!", user
+
+    computed_hash = hash_password(password, salt)
+    if computed_hash != stored_hash:
+        return False, "Incorrect password. Please verify and try again.", None
+
+    now = datetime.now(timezone.utc).isoformat()
+    conn = _get_connection()
+    with conn:
+        conn.execute("UPDATE users SET last_login = ? WHERE uid = ?", (now, user["uid"]))
+    conn.close()
+
+    set_last_active_uid(user["uid"])
+    return True, "Login successful!", user
+
+
+def login_or_register_google(email: str, display_name: Optional[str] = None, photo_url: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Authenticates or registers a user via Google OAuth.
+    """
+    init_db()
+    norm_email = email.strip().lower()
+    existing = get_user_by_email(norm_email)
+    now = datetime.now(timezone.utc).isoformat()
+
+    if existing:
+        uid = existing["uid"]
+        conn = _get_connection()
+        with conn:
+            conn.execute("""
+                UPDATE users SET last_login = ?, provider = 'google'
+                WHERE uid = ?
+            """, (now, uid))
+        conn.close()
+    else:
+        uid = "usr_g_" + secrets.token_hex(8)
+        name = display_name or norm_email.split("@")[0].title()
+        avatar = photo_url or f"https://api.dicebear.com/7.x/avataaars/svg?seed={norm_email}"
+        conn = _get_connection()
+        with conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO users (uid, email, display_name, photo_url, provider, created_at, last_login)
+                VALUES (?, ?, ?, ?, 'google', ?, ?)
+            """, (uid, norm_email, name, avatar, now, now))
+            cursor.execute("""
+                INSERT OR IGNORE INTO settings (uid, temperature, top_k, top_p, max_tokens)
+                VALUES (?, 0.7, 50, 0.9, 256)
+            """, (uid,))
+        conn.close()
+
+    set_last_active_uid(uid)
+    return get_user_profile(uid) or {}
 
 
 def update_user_profile(

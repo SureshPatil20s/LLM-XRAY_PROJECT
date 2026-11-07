@@ -4,7 +4,15 @@ LocalGPT Pro: Entry Point & Main Router
 Routes user to login page or personal workspace.
 """
 import streamlit as st
+import importlib
 import database
+import auth.auth
+
+if not hasattr(database, "login_or_register_google"):
+    importlib.reload(database)
+if not hasattr(auth.auth, "register"):
+    importlib.reload(auth.auth)
+
 from auth.auth import is_authenticated
 
 st.set_page_config(

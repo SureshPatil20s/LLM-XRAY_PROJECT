@@ -117,13 +117,23 @@ def render_workspace_page(loaded_model: Any, tokenizer: Any, device_str: str):
         """, unsafe_allow_html=True)
 
     with col_nav2:
-        st.markdown(f"""
-        <div style="display:inline-flex; align-items:center; gap:8px; background:#202123; border:1px solid #383a42; border-radius:18px; padding:5px 14px; font-size:0.82rem; color:#ececec;">
-            <span style="color:#eab308; font-size:0.95rem;">⚡</span>
-            <span style="font-weight:500;">{model_short_name} — Local (No API Key)</span>
-            <span style="color:#71717a; font-size:0.7rem;">⌵</span>
-        </div>
-        """, unsafe_allow_html=True)
+        colab_gpu_url = st.session_state.get("colab_gpu_url", "")
+        if colab_gpu_url:
+            st.markdown("""
+            <div style="display:inline-flex; align-items:center; gap:8px; background:#143826; border:1px solid #10b981; border-radius:18px; padding:5px 14px; font-size:0.82rem; color:#6ee7b7;">
+                <span style="color:#10b981; font-size:0.95rem;">●</span>
+                <span style="font-weight:600;">Qwen 2.5 1.5B — Colab GPU Active</span>
+                <span style="color:#10b981; font-size:0.7rem;">⚡</span>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div style="display:inline-flex; align-items:center; gap:8px; background:#202123; border:1px solid #383a42; border-radius:18px; padding:5px 14px; font-size:0.82rem; color:#ececec;">
+                <span style="color:#eab308; font-size:0.95rem;">⚡</span>
+                <span style="font-weight:500;">{model_short_name} — Local CPU</span>
+                <span style="color:#71717a; font-size:0.7rem;">⌵</span>
+            </div>
+            """, unsafe_allow_html=True)
 
     with col_nav3:
         col_nc, col_rag, col_st, col_us, col_lo = st.columns([1.5, 1.4, 0.7, 1.3, 0.7])
@@ -199,6 +209,35 @@ def render_workspace_page(loaded_model: Any, tokenizer: Any, device_str: str):
                     mime="application/pdf",
                     key=f"dl_pdf_{conv_id}"
                 )
+
+        # Colab GPU Server URL configuration
+        st.markdown("<div style='border-top: 1px solid #2e3038; margin: 12px 0 8px 0;'></div>", unsafe_allow_html=True)
+        col_gpu1, col_gpu2 = st.columns([3.5, 1.2])
+        with col_gpu1:
+            colab_input = st.text_input(
+                "⚡ Colab GPU Server URL (NVIDIA T4 Acceleration):",
+                value=st.session_state.get("colab_gpu_url") or "",
+                placeholder="e.g. https://xxxx.trycloudflare.com or https://xxxx.ngrok-free.app",
+                key=f"colab_url_input_{conv_id}",
+                help="Paste the public URL from the Colab GPU notebook to run inference on free NVIDIA T4 GPU."
+            )
+        with col_gpu2:
+            st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
+            if st.button("🔗 Connect GPU", key=f"colab_conn_btn_{conv_id}", use_container_width=True):
+                if colab_input.strip():
+                    from remote_client import check_remote_gpu_health
+                    with st.spinner("Connecting to remote Colab GPU..."):
+                        is_ok, info = check_remote_gpu_health(colab_input.strip())
+                    if is_ok:
+                        st.session_state["colab_gpu_url"] = colab_input.strip()
+                        st.toast(f"✅ Connected to Colab GPU! ({info.get('device', 'cuda')})")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ Connection failed: {info.get('error')}")
+                else:
+                    st.session_state["colab_gpu_url"] = None
+                    st.info("Switched to Local CPU inference.")
+                    st.rerun()
 
     # Fetch History
     history = memory_mgr.get_history()
@@ -338,7 +377,8 @@ def render_workspace_page(loaded_model: Any, tokenizer: Any, device_str: str):
                 max_new_tokens=int(user_settings.get("max_tokens", 256)),
                 use_rag=use_rag,
                 device=device_str,
-                uid=uid
+                uid=uid,
+                remote_gpu_url=st.session_state.get("colab_gpu_url")
             )
 
             full_response = st.write_stream(stream_gen)

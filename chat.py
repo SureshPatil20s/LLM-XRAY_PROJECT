@@ -29,7 +29,8 @@ def stream_chat_response(
     max_new_tokens: int = 512,
     use_rag: bool = True,
     device: str = "cpu",
-    uid: Optional[str] = None
+    uid: Optional[str] = None,
+    remote_gpu_url: Optional[str] = None
 ) -> Tuple[Generator[str, None, None], List[Dict[str, Any]]]:
     """
     Sets up streaming response generation for the user query.
@@ -59,7 +60,20 @@ def stream_chat_response(
         max_history_turns=8
     )
 
-    # Apply tokenizer chat template
+    # If remote Colab GPU server is configured, stream from Colab GPU
+    if remote_gpu_url and remote_gpu_url.strip():
+        from remote_client import stream_remote_chat
+        token_gen = stream_remote_chat(
+            base_url=remote_gpu_url.strip(),
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_new_tokens,
+            top_p=top_p,
+            top_k=top_k
+        )
+        return token_gen, sources_list
+
+    # Apply tokenizer chat template (Local CPU/GPU inference)
     if hasattr(tokenizer, "apply_chat_template"):
         formatted_prompt = tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True

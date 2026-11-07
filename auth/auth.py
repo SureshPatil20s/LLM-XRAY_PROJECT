@@ -1,11 +1,20 @@
 """
 Authentication state management and user session handling.
-Ensures session persistence across multi-page navigation and page refreshes.
+Provides:
+- User Registration with salted password hashing
+- User Login & credential verification
+- Google OAuth authentication & profile sync
+- Session persistence across multi-page navigation and page refreshes
 """
 import streamlit as st
-from typing import Optional, Dict, Any
+import importlib
+from typing import Optional, Dict, Any, Tuple
 from auth.firebase_admin_init import verify_token
 import database
+
+# Ensure live module sync if Streamlit kept an older database module in memory
+if not hasattr(database, "login_or_register_google"):
+    importlib.reload(database)
 
 
 def restore_session_if_needed() -> Optional[Dict[str, Any]]:
@@ -44,6 +53,75 @@ def is_authenticated() -> bool:
     return restore_session_if_needed() is not None
 
 
+def register(email: str, password: str, display_name: Optional[str] = None) -> Tuple[bool, str, Optional[Dict[str, Any]]]:
+    """
+    Registers a new user with email and password.
+    Returns (success, message, user_dict).
+    """
+    success, msg, profile = database.register_user(email, password, display_name)
+    if success and profile:
+        user_session = {
+            "uid": profile["uid"],
+            "email": profile["email"],
+            "display_name": profile["display_name"],
+            "photo_url": profile["photo_url"],
+            "provider": "email",
+            "email_verified": True,
+            "id_token": f"email_token_::{profile['uid']}",
+            "theme": profile.get("theme", "dark"),
+            "default_system_prompt": profile.get("default_system_prompt")
+        }
+        st.session_state["user"] = user_session
+        st.session_state["theme"] = user_session["theme"]
+        return True, msg, user_session
+    return False, msg, None
+
+
+def login(email: str, password: str) -> Tuple[bool, str, Optional[Dict[str, Any]]]:
+    """
+    Authenticates user with email and password.
+    Returns (success, message, user_dict).
+    """
+    success, msg, profile = database.authenticate_user(email, password)
+    if success and profile:
+        user_session = {
+            "uid": profile["uid"],
+            "email": profile["email"],
+            "display_name": profile["display_name"],
+            "photo_url": profile["photo_url"],
+            "provider": profile.get("provider", "email"),
+            "email_verified": True,
+            "id_token": f"email_token_::{profile['uid']}",
+            "theme": profile.get("theme", "dark"),
+            "default_system_prompt": profile.get("default_system_prompt")
+        }
+        st.session_state["user"] = user_session
+        st.session_state["theme"] = user_session["theme"]
+        return True, msg, user_session
+    return False, msg, None
+
+
+def sign_in_with_google(email: str, display_name: Optional[str] = None, photo_url: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Authenticates or signs up a user via Google OAuth provider.
+    """
+    profile = database.login_or_register_google(email, display_name, photo_url)
+    user_session = {
+        "uid": profile["uid"],
+        "email": profile["email"],
+        "display_name": profile["display_name"],
+        "photo_url": profile["photo_url"],
+        "provider": "google",
+        "email_verified": True,
+        "id_token": f"google_token_::{profile['uid']}",
+        "theme": profile.get("theme", "dark"),
+        "default_system_prompt": profile.get("default_system_prompt")
+    }
+    st.session_state["user"] = user_session
+    st.session_state["theme"] = user_session["theme"]
+    return user_session
+
+
 def login_with_token(id_token: str) -> Dict[str, Any]:
     """
     Verifies Firebase token, syncs user with database, and sets session state.
@@ -56,7 +134,6 @@ def login_with_token(id_token: str) -> Dict[str, Any]:
     provider = decoded.get("firebase", {}).get("sign_in_provider", "firebase")
     email_verified = decoded.get("email_verified", True)
 
-    # Upsert user record in database
     user_record = database.upsert_user(
         uid=uid,
         email=email,
